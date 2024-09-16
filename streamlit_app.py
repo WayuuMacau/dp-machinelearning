@@ -120,4 +120,4 @@ st.dataframe(df_prediction_proba_percentage,
              }, hide_index=True)
 
 penguins_species = np.array(['Adelie', 'Chinstrap', 'Gentoo'])
-st.success(f"Predicted Species: {penguins_species[prediction][0]} with probabilities: {df_prediction_proba_percentage.values[0]}")
+st.success(str(penguins_species[prediction][0]))

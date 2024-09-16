@@ -3,9 +3,10 @@ import numpy as np
 import pandas as pd
 from sklearn.svm import SVC
 
-st.title('🤖 Machine Learning App')
+st.title('🐧Penguin Classifier App')
 
-st.info('This is app builds a machine learning model!')
+st.info('This app is built with 🤖machine learning model - support vector machine!\nPowered by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 55767752')
+
 
 with st.expander('Data'):
   st.write('**Raw data**')

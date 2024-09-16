@@ -137,6 +137,10 @@ st.dataframe(df_prediction_proba_percentage,
                ),
              }, hide_index=True)
 
-penguins_species = np.array(['Adelie', 'Chinstrap', 'Gentoo'])
-predicted_species = penguins_species[prediction][0]
+# 獲取預測的索引
+predicted_index = prediction[0]  # 因為 prediction 是一個數組，取第一個元素
+
+# 使用該索引來獲取預測的物種
+predicted_species = penguins_species[predicted_index]
 st.success(f"Predicted Species: {predicted_species}")
+

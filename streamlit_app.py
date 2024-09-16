@@ -108,10 +108,6 @@ df_prediction_proba.rename(columns={0: 'Adelie',
 st.header("",divider="rainbow")
 
 # Display predicted species
-penguins_species = np.array(['Adelie', 'Chinstrap', 'Gentoo'])
-predicted_species = penguins_species[prediction][0]
-st.success(f"**Predicted Species:** {predicted_species}")
-
 #st.subheader('Predicted Species')
 df_prediction_proba_percentage = df_prediction_proba * 100  # 將概率轉換為百分比
 df_prediction_proba_percentage = df_prediction_proba_percentage.round(2)  # 四捨五入到小數點後兩位
@@ -143,4 +139,4 @@ st.dataframe(df_prediction_proba_percentage,
 
 penguins_species = np.array(['Adelie', 'Chinstrap', 'Gentoo'])
 predicted_species = penguins_species[prediction][0]
-#st.success(f"Predicted Species: {predicted_species}")
+st.success(f"Predicted Species: {predicted_species}")

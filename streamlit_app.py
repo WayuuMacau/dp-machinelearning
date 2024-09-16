@@ -140,11 +140,12 @@ st.dataframe(df_prediction_proba_percentage,
 # Apply model to make predictions
 prediction = clf.predict(input_row)
 
-# 獲取預測的索引
-predicted_index = prediction[0]  # 因為 prediction 是一個數組，取第一個元素
+# 確保 prediction 是一維數組
+predicted_index = np.where(penguins_species == prediction[0])[0][0]
 
 # 使用該索引來獲取預測的物種
 predicted_species = penguins_species[predicted_index]
 
 # 顯示預測的物種
 st.success(f"Predicted Species: {predicted_species}")
+

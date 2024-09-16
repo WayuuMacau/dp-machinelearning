@@ -141,6 +141,6 @@ st.dataframe(df_prediction_proba_percentage,
                ),
              }, hide_index=True)
 
-#penguins_species = np.array(['Adelie', 'Chinstrap', 'Gentoo'])
-#predicted_species = penguins_species[prediction][0]
-#st.success(f"Predicted Species: {predicted_species}")
+penguins_species = np.array(['Adelie', 'Chinstrap', 'Gentoo'])
+predicted_species = penguins_species[prediction][0]
+st.success(f"Predicted Species: {predicted_species}")

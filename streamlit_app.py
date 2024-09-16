@@ -76,7 +76,7 @@ with st.expander('Data preparation'):
 
 # Model training and inference
 ## Train the ML model
-clf = SVC(kernel='poly')
+clf = SVC(kernel='poly', probability=True) 
 clf.fit(X, y)
 
 ## Apply model to make predictions

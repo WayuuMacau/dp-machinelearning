@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
 
 st.title('🤖 Machine Learning App')
 
@@ -76,7 +76,7 @@ with st.expander('Data preparation'):
 
 # Model training and inference
 ## Train the ML model
-clf = RandomForestClassifier()
+clf = SVC(kernel='poly')
 clf.fit(X, y)
 
 ## Apply model to make predictions

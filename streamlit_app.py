@@ -137,6 +137,8 @@ st.dataframe(df_prediction_proba_percentage,
                ),
              }, hide_index=True)
 
+# Apply model to make predictions
+prediction = clf.predict(input_row)
 
 # 獲取預測的索引
 predicted_index = prediction[0]  # 因為 prediction 是一個數組，取第一個元素

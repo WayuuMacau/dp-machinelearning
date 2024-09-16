@@ -77,18 +77,14 @@ input_row = df_penguins[:1]
 target_mapper = {'Adelie': 0,
                  'Chinstrap': 1,
                  'Gentoo': 2}
+
 def target_encode(val):
-  return target_mapper[val]
+    return target_mapper[val]
 
 y = y_raw.apply(target_encode)
 
-#with st.expander('Data preparation'):
-#  st.write('**Encoded X (input penguin)**')
-#  input_row
-#  st.write('**Encoded y**')
-#  y
-
-
+# 定義物種列表
+penguins_species = y_raw.unique()
 
 # Model training and inference
 ## Train the ML model

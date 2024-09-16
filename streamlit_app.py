@@ -134,16 +134,13 @@ st.dataframe(df_prediction_proba_percentage,
              }, hide_index=True)
 
 # Apply model to make predictions
-prediction = clf.predict(input_row)
+prediction_proba = clf.predict_proba(input_row)
 
-# 確保 prediction 是一維數組
-if len(prediction) > 0:
-    predicted_index = np.where(penguins_species == prediction[0])[0]
-    if predicted_index.size > 0:
-        predicted_species = penguins_species[predicted_index[0]]
-        # 顯示預測的物種
-        st.success(f"Predicted Species: {predicted_species}")
-    else:
-        st.error("未能找到預測的物種。")
-else:
-    st.error("未能進行預測。")
+# 獲取概率最高的物種的索引
+predicted_index = np.argmax(prediction_proba)
+
+# 使用該索引來獲取預測的物種
+predicted_species = penguins_species[predicted_index]
+
+# 顯示預測的物種
+st.success(f"Predicted Species: {predicted_species}")

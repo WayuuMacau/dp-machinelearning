@@ -92,4 +92,29 @@ st.success(f"Predicted Species: {predicted_species}")
 df_prediction_proba = pd.DataFrame(prediction_proba, columns=target_mapper.keys())
 df_prediction_proba_percentage = df_prediction_proba * 100
 df_prediction_proba_percentage = df_prediction_proba_percentage.round(2)
-st.dataframe(df_prediction_proba_percentage)
+
+# 使用漂亮的數據框顯示概率
+st.dataframe(df_prediction_proba_percentage, 
+             column_config={ 
+               'Adelie': st.column_config.ProgressColumn( 
+                 'Adelie (%)', 
+                 format='%f', 
+                 width='medium', 
+                 min_value=0, 
+                 max_value=100 
+               ), 
+               'Chinstrap': st.column_config.ProgressColumn( 
+                 'Chinstrap (%)', 
+                 format='%f', 
+                 width='medium', 
+                 min_value=0, 
+                 max_value=100 
+               ), 
+               'Gentoo': st.column_config.ProgressColumn( 
+                 'Gentoo (%)', 
+                 format='%f', 
+                 width='medium', 
+                 min_value=0, 
+                 max_value=100 
+               ), 
+             }, hide_index=True)

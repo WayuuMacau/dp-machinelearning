@@ -22,8 +22,10 @@ with st.expander('Data'):
   y_raw
 
 with st.expander('Data visualization'):
-  st.scatter_chart(data=df, x='bill_length_mm', y='body_mass_g', color='species')
-
+    # Define colors for each species
+    colors = {'Adelie': 'blue', 'Chinstrap': 'orange', 'Gentoo': 'green'}
+    st.scatter_chart(data=df, x='bill_length_mm', y='body_mass_g', color=df['species'].map(colors))
+  
 # Input features
 with st.sidebar:
   st.header('Input features')

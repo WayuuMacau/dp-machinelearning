@@ -43,6 +43,7 @@ with st.sidebar:
     flipper_length_mm = st.slider('Flipper length (mm)', 172.0, 231.0, 201.0)
     body_mass_g = st.slider('Body mass (g)', 2700.0, 6300.0, 4207.0)
     gender = st.selectbox('Gender', ('male', 'female'))
+    
     # Create a DataFrame for the input features
     data = {'island': island,
             'bill_length_mm': bill_length_mm,
@@ -57,7 +58,7 @@ with st.expander('Input features'):
     st.write('**Input penguin**')
     st.write(input_df)
 
-st.header("", divider="rainbow")
+st.header("",divider="rainbow")
 
 # Data preparation
 # Encode X
@@ -70,6 +71,7 @@ input_row = df_penguins[:1]
 target_mapper = {'Adelie': 0, 'Chinstrap': 1, 'Gentoo': 2}
 def target_encode(val):
     return target_mapper[val]
+
 y = y_raw.apply(target_encode)
 
 # Model training and inference
@@ -88,16 +90,33 @@ predicted_species = list(target_mapper.keys())[predicted_index]
 # 顯示預測的物種
 st.success(f"Predicted Species: {predicted_species}")
 
-# 顯示預測的物種概率
+# Display prediction probabilities
 df_prediction_proba = pd.DataFrame(prediction_proba, columns=target_mapper.keys())
 df_prediction_proba_percentage = df_prediction_proba * 100
 df_prediction_proba_percentage = df_prediction_proba_percentage.round(2)
 
-# 定義顏色函數
-def highlight_max(s):
-    is_max = s == s.max()
-    return ['background-color: green' if v else 'background-color: red' for v in is_max]
-
 # 使用漂亮的數據框顯示概率
-styled_df = df_prediction_proba_percentage.style.apply(highlight_max)
-st.dataframe(styled_df, hide_index=True)
+st.dataframe(df_prediction_proba_percentage, 
+             column_config={ 
+               'Adelie': st.column_config.ProgressColumn( 
+                 'Adelie (%)', 
+                 format='%f', 
+                 width='medium', 
+                 min_value=0, 
+                 max_value=100 
+               ), 
+               'Chinstrap': st.column_config.ProgressColumn( 
+                 'Chinstrap (%)', 
+                 format='%f', 
+                 width='medium', 
+                 min_value=0, 
+                 max_value=100 
+               ), 
+               'Gentoo': st.column_config.ProgressColumn( 
+                 'Gentoo (%)', 
+                 format='%f', 
+                 width='medium', 
+                 min_value=0, 
+                 max_value=100 
+               ), 
+             }, hide_index=True)

@@ -58,6 +58,8 @@ with st.expander('Input features'):
     st.write('**Input penguin**')
     st.write(input_df)
 
+st.header("",divider="rainbow")
+
 # Data preparation
 # Encode X
 encode = ['island', 'sex']

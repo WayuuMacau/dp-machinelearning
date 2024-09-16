@@ -94,31 +94,30 @@ st.subheader('Predicted Species')
 df_prediction_proba_percentage = df_prediction_proba * 100  # 將概率轉換為百分比
 df_prediction_proba_percentage = df_prediction_proba_percentage.round(2)  # 四捨五入到小數點後兩位
 
-st.dataframe(df_prediction_proba,
+st.dataframe(df_prediction_proba_percentage,
              column_config={
                'Adelie': st.column_config.ProgressColumn(
-                 'Adelie',
+                 'Adelie (%)',
                  format='%f',
                  width='medium',
                  min_value=0,
-                 max_value=1
+                 max_value=100
                ),
                'Chinstrap': st.column_config.ProgressColumn(
-                 'Chinstrap',
+                 'Chinstrap (%)',
                  format='%f',
                  width='medium',
                  min_value=0,
-                 max_value=1
+                 max_value=100
                ),
                'Gentoo': st.column_config.ProgressColumn(
-                 'Gentoo',
+                 'Gentoo (%)',
                  format='%f',
                  width='medium',
                  min_value=0,
-                 max_value=1
+                 max_value=100
                ),
              }, hide_index=True)
 
-
 penguins_species = np.array(['Adelie', 'Chinstrap', 'Gentoo'])
-st.success(str(penguins_species[prediction][0]))
+st.success(f"Predicted Species: {penguins_species[prediction][0]} with probabilities: {df_prediction_proba_percentage.values[0]}")

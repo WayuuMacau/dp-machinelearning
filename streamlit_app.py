@@ -22,9 +22,22 @@ with st.expander('Data'):
   y_raw
 
 with st.expander('Data visualization'):
-    # Define colors for each species
-    colors = {'Adelie': 'blue', 'Chinstrap': 'orange', 'Gentoo': 'green'}
-    st.scatter_chart(data=df, x='bill_length_mm', y='body_mass_g', color=df['species'].map(colors))
+    # Define RGB colors for each species
+    colors = {
+        'Adelie': 'rgb(0, 0, 255)',       # Blue
+        'Chinstrap': 'rgb(255, 165, 0)',  # Orange
+        'Gentoo': 'rgb(0, 128, 0)'        # Green
+    }
+    df['color'] = df['species'].map(colors)
+
+    scatter = alt.Chart(df).mark_circle(size=60).encode(
+        x='bill_length_mm',
+        y='body_mass_g',
+        color=alt.Color('color:N', scale=None),  # Use the color column
+        tooltip=['species']
+    ).interactive()
+
+    st.altair_chart(scatter, use_container_width=True)
   
 # Input features
 with st.sidebar:

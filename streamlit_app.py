@@ -4,7 +4,7 @@ import pandas as pd
 from sklearn.svm import SVC
 
 st.title('🐧Penguin Classifier App')
-st.subheader('This🐧Penguin Classifier uses 🤖machine learning model - support vector machine')
+st.subheader('🤖machine learning model - support vector machine')
 st.info('Powered by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 55767752')
 
 

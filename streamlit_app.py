@@ -89,6 +89,8 @@ df_prediction_proba.rename(columns={0: 'Adelie',
                                  1: 'Chinstrap',
                                  2: 'Gentoo'})
 
+st.header("",divider="rainbow")
+
 # Display predicted species
 penguins_species = np.array(['Adelie', 'Chinstrap', 'Gentoo'])
 predicted_species = penguins_species[prediction][0]

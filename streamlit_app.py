@@ -2,6 +2,8 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from sklearn.svm import SVC
+import altair as alt
+
 
 st.title('🐧Penguin Classifier App')
 st.subheader('🤖machine learning model - support vector machine')

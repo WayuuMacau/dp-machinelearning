@@ -7,7 +7,7 @@ import altair as alt
 
 st.title('🐧Penguin Classifier App')
 st.subheader('🤖machine learning model - support vector machine')
-st.info('Powered by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 55767752')
+st.info('Designted by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 55767752')
 
 
 with st.expander('Data'):

@@ -11,31 +11,36 @@ st.subheader('🤖 machine learning model - support vector machine')
 st.info('Designed by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 55767752')
 st.warning("Try to fine-tune the left-hand side parameters to see the prediction result of penguin species")
 
-with st.expander('Data'):
-    st.write('**Raw data**')
-    df = pd.read_csv('https://raw.githubusercontent.com/dataprofessor/data/master/penguins_cleaned.csv')
-    st.write(df)
-    st.write('**X - Independent variables**')
-    X_raw = df.drop('species', axis=1)
-    st.write(X_raw)
-    st.write('**y - Dependent variable**')
-    y_raw = df.species
-    st.write(y_raw)
+# Data loading and preprocessing
+df = pd.read_csv('https://raw.githubusercontent.com/dataprofessor/data/master/penguins_cleaned.csv')
+df['color'] = df['species'].map({
+    'Adelie': 'rgb(0, 0, 255)',       # Blue
+    'Chinstrap': 'rgb(255, 165, 0)',  # Orange
+    'Gentoo': 'rgb(0, 128, 0)'        # Green
+})
 
-    # Convert the target variable y to numeric (if it's categorical)
-    y_numeric = pd.Series(y_raw.map({'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}), name='species')
+# Sidebar input features
+with st.sidebar:
+    st.header('Input features')
+    bill_length_mm = st.slider('Bill length (mm)', 32.1, 59.6, 43.9)
+    bill_depth_mm = st.slider('Bill depth (mm)', 13.1, 21.5, 17.2)
+    flipper_length_mm = st.slider('Flipper length (mm)', 172.0, 231.0, 201.0)
+    body_mass_g = st.slider('Body mass (g)', 2700.0, 6300.0, 4207.0)
+    gender = st.selectbox('Gender', ('male', 'female'))
+    island = st.selectbox('Island', ('Biscoe', 'Dream', 'Torgersen'))
 
-    # Combine X and y for correlation calculation
-    combined_df = pd.concat([X_raw, y_numeric], axis=1)
-
-with st.expander('Data visualization'):
-    colors = {
-        'Adelie': 'rgb(0, 0, 255)',       # Blue
-        'Chinstrap': 'rgb(255, 165, 0)',  # Orange
-        'Gentoo': 'rgb(0, 128, 0)'        # Green
+    # Create a DataFrame for the input features
+    input_data = {
+        'bill_length_mm': bill_length_mm,
+        'bill_depth_mm': bill_depth_mm,
+        'flipper_length_mm': flipper_length_mm,
+        'body_mass_g': body_mass_g,
+        'species': 'input'  # Placeholder for species
     }
-    df['color'] = df['species'].map(colors)
+    input_df = pd.DataFrame([input_data])
 
+# Data visualization
+with st.expander('Data visualization'):
     # 第一個散點圖
     scatter1 = alt.Chart(df).mark_circle(size=60).encode(
         x='bill_length_mm',
@@ -43,32 +48,62 @@ with st.expander('Data visualization'):
         color=alt.Color('color:N', scale=None),
         tooltip=['species']
     ).interactive()
-    st.altair_chart(scatter1, use_container_width=True)
+
+    # Add the input data point
+    input_point_1 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
+        x='bill_length_mm',
+        y='body_mass_g'
+    )
+
+    st.altair_chart(scatter1 + input_point_1, use_container_width=True)
 
     # 第二個散點圖
     scatter2 = alt.Chart(df).mark_circle(size=60).encode(
-        x='bill_depth_mm',        # Bill depth
-        y='flipper_length_mm',    # Flipper length
+        x='bill_depth_mm',
+        y='flipper_length_mm',
         color=alt.Color('color:N', scale=None),
         tooltip=['species']
     ).interactive()
-    st.altair_chart(scatter2, use_container_width=True)
 
+    # Add the input data point
+    input_point_2 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
+        x='bill_depth_mm',
+        y='flipper_length_mm'
+    )
+
+    st.altair_chart(scatter2 + input_point_2, use_container_width=True)
+
+    # 第三個散點圖
     scatter3 = alt.Chart(df).mark_circle(size=60).encode(
-        x='bill_depth_mm',      
-        y='bill_length_mm',   
+        x='bill_depth_mm',
+        y='bill_length_mm',
         color=alt.Color('color:N', scale=None),
         tooltip=['species']
     ).interactive()
-    st.altair_chart(scatter3, use_container_width=True)
 
+    # Add the input data point
+    input_point_3 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
+        x='bill_depth_mm',
+        y='bill_length_mm'
+    )
+
+    st.altair_chart(scatter3 + input_point_3, use_container_width=True)
+
+    # 第四個散點圖
     scatter4 = alt.Chart(df).mark_circle(size=60).encode(
-        x='flipper_length_mm',      
-        y='body_mass_g',   
+        x='flipper_length_mm',
+        y='body_mass_g',
         color=alt.Color('color:N', scale=None),
         tooltip=['species']
     ).interactive()
-    st.altair_chart(scatter4, use_container_width=True)
+
+    # Add the input data point
+    input_point_4 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
+        x='flipper_length_mm',
+        y='body_mass_g'
+    )
+
+    st.altair_chart(scatter4 + input_point_4, use_container_width=True)
 
 # Correlation expander
 with st.expander('Correlation'):

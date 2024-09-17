@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from sklearn.svm import SVC, SVR
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, accuracy_score
 from sklearn.model_selection import train_test_split
 import altair as alt
 
@@ -22,7 +22,7 @@ with st.expander('Data'):
     y_raw = df.species
     st.write(y_raw)
 
-    # Convert the target variable y to numeric (if it's categorical)
+    # Convert the variable to numeric (if it's categorical)
     y_numeric = pd.Series(y_raw.map({'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}), name='species')
 
     # Combine X and y for correlation calculation
@@ -31,11 +31,17 @@ with st.expander('Data'):
 # Input features
 with st.sidebar:
     st.header('Input features')
+    st.write('**Bill length (mm)**')
     bill_length_mm = st.slider('Bill length (mm)', 32.1, 59.6, 43.9)
+    st.write('**Bill depth (mm)**')
     bill_depth_mm = st.slider('Bill depth (mm)', 13.1, 21.5, 17.2)
+    st.write('**Flipper length (mm)**')
     flipper_length_mm = st.slider('Flipper length (mm)', 172.0, 231.0, 201.0)
+    st.write('**Body mass (g)**')
     body_mass_g = st.slider('Body mass (g)', 2700.0, 6300.0, 4207.0)
+    st.write('**Gender**')
     gender = st.selectbox('Gender', ('male', 'female'))
+    st.write('**Island**')
     island = st.selectbox('Island', ('Biscoe', 'Dream', 'Torgersen'))
 
     # Create a DataFrame for the input features
@@ -49,79 +55,6 @@ with st.sidebar:
     }
     input_df = pd.DataFrame(input_data, index=[0])
 
-with st.expander('Data visualization'):
-    colors = {
-        'Adelie': 'rgb(0, 0, 255)',       # Blue
-        'Chinstrap': 'rgb(255, 165, 0)',  # Orange
-        'Gentoo': 'rgb(0, 128, 0)'        # Green
-    }
-    df['color'] = df['species'].map(colors)
-
-    # 第一個散點圖
-    scatter1 = alt.Chart(df).mark_circle(size=60).encode(
-        x='bill_length_mm',
-        y='body_mass_g',
-        color=alt.Color('color:N', scale=None),
-        tooltip=['species']
-    ).interactive()
-
-    # Add solid red spot
-    red_spot1 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
-        x='Bill Length (mm)',
-        y='Body Mass (g)'
-    )
-
-    st.altair_chart(scatter1 + red_spot1, use_container_width=True)
-
-    # 第二個散點圖
-    scatter2 = alt.Chart(df).mark_circle(size=60).encode(
-        x='bill_depth_mm',
-        y='flipper_length_mm',
-        color=alt.Color('color:N', scale=None),
-        tooltip=['species']
-    ).interactive()
-
-    # Add solid red spot
-    red_spot2 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
-        x='Bill Depth (mm)',
-        y='Flipper Length (mm)'
-    )
-
-    st.altair_chart(scatter2 + red_spot2, use_container_width=True)
-
-    # 第三個散點圖
-    scatter3 = alt.Chart(df).mark_circle(size=60).encode(
-        x='bill_depth_mm',
-        y='bill_length_mm',
-        color=alt.Color('color:N', scale=None),
-        tooltip=['species']
-    ).interactive()
-
-    # Add solid red spot
-    red_spot3 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
-        x='Bill Depth (mm)',
-        y='Bill Length (mm)'
-    )
-
-    st.altair_chart(scatter3 + red_spot3, use_container_width=True)
-
-    # 第四個散點圖
-    scatter4 = alt.Chart(df).mark_circle(size=60).encode(
-        x='flipper_length_mm',
-        y='body_mass_g',
-        color=alt.Color('color:N', scale=None),
-        tooltip=['species']
-    ).interactive()
-
-    # Add solid red spot
-    red_spot4 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
-        x='Flipper Length (mm)',
-        y='Body Mass (g)'
-    )
-
-    st.altair_chart(scatter4 + red_spot4, use_container_width=True)
-
-# Correlation expander
 with st.expander('Correlation'):
     # Ensure all data is numeric
     combined_df = combined_df.select_dtypes(include=[np.number])
@@ -156,6 +89,7 @@ with st.expander('Cross Validation'):
     y_test_pred = svm_classifier.predict(X_test)
 
     # Calculate metrics
+    from sklearn.metrics import accuracy_score
     train_accuracy = accuracy_score(y_train, y_train_pred)
     test_accuracy = accuracy_score(y_test, y_test_pred)
 
@@ -205,6 +139,7 @@ st.success(f"Predicted Species: {predicted_species}")
 df_prediction_proba = pd.DataFrame(prediction_proba, columns={'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}.keys())
 df_prediction_proba_percentage = df_prediction_proba * 100
 df_prediction_proba_percentage = df_prediction_proba_percentage.round(2)
+
 
 # Display probabilities in a nice DataFrame
 st.dataframe(df_prediction_proba_percentage, 

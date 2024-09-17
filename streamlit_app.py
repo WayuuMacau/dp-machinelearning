@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
-from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import altair as alt
 
 st.title('🐧Penguin Classifier App')
@@ -137,44 +137,46 @@ with st.expander('Correlation'):
     st.write('**Correlation between each feature and the target variable**')
     st.dataframe(correlation_df, use_container_width=False)
 
-# SVM Regression Metrics
+# SVM Classification Metrics
 with st.expander('Cross Validation'):
     st.caption('Train set 80%, Test set 20%; Sampling without replacement')
-    # Prepare data for regression
+    # Prepare data for classification
     X_numeric = combined_df.drop('species', axis=1)
     y_numeric = combined_df['species']
 
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X_numeric, y_numeric, test_size=0.2, random_state=42)
 
-    # Create and fit the SVM regressor
-    svm_regressor = SVR(kernel='rbf')  # You can also try 'rbf' or other kernels
-    svm_regressor.fit(X_train, y_train)
+    # Create and fit the SVM classifier
+    svm_classifier = SVC(kernel='rbf', probability=True)
+    svm_classifier.fit(X_train, y_train)
 
     # Make predictions
-    y_train_pred = svm_regressor.predict(X_train)
-    y_test_pred = svm_regressor.predict(X_test)
+    y_train_pred = svm_classifier.predict(X_train)
+    y_test_pred = svm_classifier.predict(X_test)
 
     # Calculate metrics
-    train_mse = mean_squared_error(y_train, y_train_pred)
-    test_mse = mean_squared_error(y_test, y_test_pred)
-    train_r2 = r2_score(y_train, y_train_pred)
-    test_r2 = r2_score(y_test, y_test_pred)
-    train_mae = mean_absolute_error(y_train, y_train_pred)
-    test_mae = mean_absolute_error(y_train, y_train_pred)
+    train_accuracy = accuracy_score(y_train, y_train_pred)
+    test_accuracy = accuracy_score(y_test, y_test_pred)
+    train_precision = precision_score(y_train, y_train_pred, average='weighted')
+    test_precision = precision_score(y_test, y_test_pred, average='weighted')
+    train_recall = recall_score(y_train, y_train_pred, average='weighted')
+    test_recall = recall_score(y_test, y_test_pred, average='weighted')
+    train_f1 = f1_score(y_train, y_train_pred, average='weighted')
+    test_f1 = f1_score(y_test, y_test_pred, average='weighted')
 
     # Create a DataFrame for the metrics
     metrics_df = pd.DataFrame({
-        'Metric': ['MSE', 'R² Score', 'MAE'],
-        'Train': [train_mse, train_r2, train_mae],
-        'Test': [test_mse, test_r2, test_mae]
+        'Metric': ['Accuracy', 'Precision', 'Recall', 'F1 Score'],
+        'Train': [train_accuracy, train_precision, train_recall, train_f1],
+        'Test': [test_accuracy, test_precision, test_recall, test_f1]
     })
 
     # Set the Metric column as the index
     metrics_df.set_index('Metric', inplace=True)
 
     # Display the metrics in a table
-    st.write('**Regression Metrics**')
+    st.write('**Classification Metrics**')
     st.dataframe(metrics_df, use_container_width=False)
 
 # Input features expander

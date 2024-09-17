@@ -61,7 +61,9 @@ with st.expander('Input features'):
 
 # Correlation expander
 with st.expander('Correlation'):
-    correlation_matrix = X_raw.corr()
+    # Select only numeric columns for correlation
+    numeric_X_raw = X_raw.select_dtypes(include=[np.number])
+    correlation_matrix = numeric_X_raw.corr()
     st.write('**Correlation between features**')
     st.dataframe(correlation_matrix)
     

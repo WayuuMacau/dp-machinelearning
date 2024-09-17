@@ -64,7 +64,7 @@ with st.expander('Correlation'):
     # Select only numeric columns for correlation
     numeric_X_raw = X_raw.select_dtypes(include=[np.number])
     correlation_matrix = numeric_X_raw.corr()
-    st.write('**Correlation between features**')
+    st.write('**Correlation between features X and y**')
     st.dataframe(correlation_matrix)
     
 st.header("",divider="rainbow")

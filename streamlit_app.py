@@ -69,7 +69,7 @@ with st.expander('Regression Metrics'):
     X_train, X_test, y_train, y_test = train_test_split(X_numeric, y_numeric, test_size=0.2, random_state=42)
 
     # Create and fit the SVM regressor
-    svm_regressor = SVR(kernel='linear')  # You can also try 'rbf' or other kernels
+    svm_regressor = SVR(kernel='rbf')  # You can also try 'rbf' or other kernels
     svm_regressor.fit(X_train, y_train)
 
     # Make predictions

@@ -176,16 +176,6 @@ with st.expander('Cross Validation'):
     st.write('**Regression Metrics**')
     st.dataframe(metrics_df, use_container_width=False)
 
-    # Add summary text
-    st.markdown("""
-    #**Summary:**
-    
-    #Test Mean Squared Error (MSE) is slightly lower than the Train MSE, which suggests that the model is generalizing well and not overfitting.
-
-    #R² scores suggest that about 57.84% of the variance in the training data and about 52.6% in the test data is explained by your model. This is a moderate level of explanatory power, indicating that while the model captures some relationship, there is still room for improvement.
-
-    #Mean Absolute Error (MAE) values indicate that, on average, the model's predictions are off by about 0.46 for the training set and 0.45 for the test set. This is fairly close, suggesting consistent performance across both datasets.
-    """)
 """
         
 # SVC Classifier Metrics

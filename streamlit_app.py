@@ -73,22 +73,27 @@ with st.expander('Regression Metrics'):
     svm_regressor.fit(X_train, y_train)
 
     # Make predictions
-    y_pred = svm_regressor.predict(X_test)
+    y_train_pred = svm_regressor.predict(X_train)
+    y_test_pred = svm_regressor.predict(X_test)
 
     # Calculate metrics
-    mse = mean_squared_error(y_test, y_pred)
-    r2 = r2_score(y_test, y_pred)
-    mae = mean_absolute_error(y_test, y_pred)
+    train_mse = mean_squared_error(y_train, y_train_pred)
+    test_mse = mean_squared_error(y_test, y_test_pred)
+    train_r2 = r2_score(y_train, y_train_pred)
+    test_r2 = r2_score(y_test, y_test_pred)
+    train_mae = mean_absolute_error(y_train, y_train_pred)
+    test_mae = mean_absolute_error(y_test, y_test_pred)
 
     # Create a DataFrame for the metrics
     metrics_df = pd.DataFrame({
-        'Metric': ['Mean Squared Error', 'R² Score', 'Mean Absolute Error'],
-        'Value': [mse, r2, mae]
+        'Metric': ['Train MSE', 'Test MSE', 'Train R² Score', 'Test R² Score', 'Train MAE', 'Test MAE'],
+        'Value': [train_mse, test_mse, train_r2, test_r2, train_mae, test_mae]
     })
 
     # Display the metrics in a table
     st.write('**Regression Metrics**')
     st.dataframe(metrics_df, use_container_width=False)
+
 
 # Input features
 with st.sidebar:

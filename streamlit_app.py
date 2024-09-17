@@ -53,9 +53,9 @@ with st.expander('Correlation'):
     correlation_df = correlation_with_y.reset_index()
     correlation_df.columns = ['Feature', 'Correlation with y']
 
-    # Display the correlation table with tighter columns
+    # Display the correlation table with narrow columns
     st.write('**Correlation between each feature and the target variable**')
-    st.dataframe(correlation_df, use_container_width=True)
+    st.dataframe(correlation_df, use_container_width=False)  # Set to False for narrow width
 
 # Input features
 with st.sidebar:
@@ -79,7 +79,7 @@ with st.sidebar:
 
 with st.expander('Input features'):
     st.write('**Input penguin**')
-    st.write(input_df)
+    st.dataframe(input_df, use_container_width=False)  # Set to False for narrow width
 
 st.header("", divider="rainbow")
 
@@ -142,4 +142,4 @@ st.dataframe(df_prediction_proba_percentage,
                  min_value=0, 
                  max_value=100 
                )
-             }) 
+             })  # Ensure this is properly closed

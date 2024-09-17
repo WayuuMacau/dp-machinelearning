@@ -36,6 +36,14 @@ with st.expander('Data visualization'):
     }
     df['color'] = df['species'].map(colors)
 
+    # Create a DataFrame for the input features
+    input_data = pd.DataFrame({
+        'bill_length_mm': [bill_length_mm],
+        'bill_depth_mm': [bill_depth_mm],
+        'flipper_length_mm': [flipper_length_mm],
+        'body_mass_g': [body_mass_g]
+    })
+
     # 第一個散點圖
     scatter1 = alt.Chart(df).mark_circle(size=60).encode(
         x='bill_length_mm',
@@ -43,32 +51,62 @@ with st.expander('Data visualization'):
         color=alt.Color('color:N', scale=None),
         tooltip=['species']
     ).interactive()
-    st.altair_chart(scatter1, use_container_width=True)
+
+    # Add red circle for input data
+    red_circle1 = alt.Chart(input_data).mark_circle(size=100, color='red').encode(
+        x='bill_length_mm',
+        y='body_mass_g'
+    )
+
+    st.altair_chart(scatter1 + red_circle1, use_container_width=True)
 
     # 第二個散點圖
     scatter2 = alt.Chart(df).mark_circle(size=60).encode(
-        x='bill_depth_mm',        # Bill depth
-        y='flipper_length_mm',    # Flipper length
+        x='bill_depth_mm',
+        y='flipper_length_mm',
         color=alt.Color('color:N', scale=None),
         tooltip=['species']
     ).interactive()
-    st.altair_chart(scatter2, use_container_width=True)
 
+    # Add red circle for input data
+    red_circle2 = alt.Chart(input_data).mark_circle(size=100, color='red').encode(
+        x='bill_depth_mm',
+        y='flipper_length_mm'
+    )
+
+    st.altair_chart(scatter2 + red_circle2, use_container_width=True)
+
+    # 第三個散點圖
     scatter3 = alt.Chart(df).mark_circle(size=60).encode(
-        x='bill_depth_mm',      
-        y='bill_length_mm',   
+        x='bill_depth_mm',
+        y='bill_length_mm',
         color=alt.Color('color:N', scale=None),
         tooltip=['species']
     ).interactive()
-    st.altair_chart(scatter3, use_container_width=True)
 
+    # Add red circle for input data
+    red_circle3 = alt.Chart(input_data).mark_circle(size=100, color='red').encode(
+        x='bill_depth_mm',
+        y='bill_length_mm'
+    )
+
+    st.altair_chart(scatter3 + red_circle3, use_container_width=True)
+
+    # 第四個散點圖
     scatter4 = alt.Chart(df).mark_circle(size=60).encode(
-        x='flipper_length_mm',      
-        y='body_mass_g',   
+        x='flipper_length_mm',
+        y='body_mass_g',
         color=alt.Color('color:N', scale=None),
         tooltip=['species']
     ).interactive()
-    st.altair_chart(scatter4, use_container_width=True)
+
+    # Add red circle for input data
+    red_circle4 = alt.Chart(input_data).mark_circle(size=100, color='red').encode(
+        x='flipper_length_mm',
+        y='body_mass_g'
+    )
+
+    st.altair_chart(scatter4 + red_circle4, use_container_width=True)
 
 # Correlation expander
 with st.expander('Correlation'):

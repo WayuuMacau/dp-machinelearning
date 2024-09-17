@@ -203,7 +203,7 @@ predicted_index = np.argmax(prediction_proba)
 predicted_species = list({'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}.keys())[predicted_index]
 
 # Display the predicted species
-st.success(f"Predicted Species: {predicted_species}")
+st.success(f"預測的鳥類：{predicted_species}")
 
 # Display prediction probabilities
 df_prediction_proba = pd.DataFrame(prediction_proba, columns={'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}.keys())

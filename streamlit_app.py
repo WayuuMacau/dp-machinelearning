@@ -63,8 +63,8 @@ with st.expander('Data visualization'):
         tooltip=['species']
     ).interactive()
 
-    # Add red spot
-    red_spot1 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
+    # Add solid red spot
+    red_spot1 = alt.Chart(input_df).mark_point(color='red', size=100, opacity=1).encode(
         x='bill_length_mm',
         y='body_mass_g'
     )
@@ -79,8 +79,8 @@ with st.expander('Data visualization'):
         tooltip=['species']
     ).interactive()
 
-    # Add red spot
-    red_spot2 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
+    # Add solid red spot
+    red_spot2 = alt.Chart(input_df).mark_point(color='red', size=100, opacity=1).encode(
         x='bill_depth_mm',
         y='flipper_length_mm'
     )
@@ -95,8 +95,8 @@ with st.expander('Data visualization'):
         tooltip=['species']
     ).interactive()
 
-    # Add red spot
-    red_spot3 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
+    # Add solid red spot
+    red_spot3 = alt.Chart(input_df).mark_point(color='red', size=100, opacity=1).encode(
         x='bill_depth_mm',
         y='bill_length_mm'
     )
@@ -111,8 +111,8 @@ with st.expander('Data visualization'):
         tooltip=['species']
     ).interactive()
 
-    # Add red spot
-    red_spot4 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
+    # Add solid red spot
+    red_spot4 = alt.Chart(input_df).mark_point(color='red', size=100, opacity=1).encode(
         x='flipper_length_mm',
         y='body_mass_g'
     )
@@ -201,4 +201,27 @@ df_prediction_proba_percentage = df_prediction_proba * 100
 df_prediction_proba_percentage = df_prediction_proba_percentage.round(2)
 
 # 使用漂亮的數據框顯示概率
-st.dataframe(df_prediction_proba_percentage)
+st.dataframe(df_prediction_proba_percentage, 
+             column_config={ 
+               'Adelie': st.column_config.ProgressColumn( 
+                 'Adelie (%)', 
+                 format='%f', 
+                 width='medium', 
+                 min_value=0, 
+                 max_value=100 
+               ), 
+               'Chinstrap': st.column_config.ProgressColumn( 
+                 'Chinstrap (%)', 
+                 format='%f', 
+                 width='medium', 
+                 min_value=0, 
+                 max_value=100 
+               ), 
+               'Gentoo': st.column_config.ProgressColumn( 
+                 'Gentoo (%)', 
+                 format='%f', 
+                 width='medium', 
+                 min_value=0, 
+                 max_value=100 
+               )
+             })  

@@ -39,13 +39,15 @@ with st.sidebar:
     island = st.selectbox('Island', ('Biscoe', 'Dream', 'Torgersen'))
 
     # Create a DataFrame for the input features
-    data = {'bill_length_mm': bill_length_mm,
-            'bill_depth_mm': bill_depth_mm,
-            'flipper_length_mm': flipper_length_mm,
-            'body_mass_g': body_mass_g,
-            'sex': gender,
-            'island': island}
-    input_df = pd.DataFrame(data, index=[0])
+    input_data = {
+        'Bill Length (mm)': bill_length_mm,
+        'Bill Depth (mm)': bill_depth_mm,
+        'Flipper Length (mm)': flipper_length_mm,
+        'Body Mass (g)': body_mass_g,
+        'Gender': gender,
+        'Island': island
+    }
+    input_df = pd.DataFrame(input_data, index=[0])
 
 with st.expander('Data visualization'):
     colors = {
@@ -65,8 +67,8 @@ with st.expander('Data visualization'):
 
     # Add solid red spot
     red_spot1 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
-        x='bill_length_mm',
-        y='body_mass_g'
+        x='Bill Length (mm)',
+        y='Body Mass (g)'
     )
 
     st.altair_chart(scatter1 + red_spot1, use_container_width=True)
@@ -81,8 +83,8 @@ with st.expander('Data visualization'):
 
     # Add solid red spot
     red_spot2 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
-        x='bill_depth_mm',
-        y='flipper_length_mm'
+        x='Bill Depth (mm)',
+        y='Flipper Length (mm)'
     )
 
     st.altair_chart(scatter2 + red_spot2, use_container_width=True)
@@ -97,8 +99,8 @@ with st.expander('Data visualization'):
 
     # Add solid red spot
     red_spot3 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
-        x='bill_depth_mm',
-        y='bill_length_mm'
+        x='Bill Depth (mm)',
+        y='Bill Length (mm)'
     )
 
     st.altair_chart(scatter3 + red_spot3, use_container_width=True)
@@ -113,8 +115,8 @@ with st.expander('Data visualization'):
 
     # Add solid red spot
     red_spot4 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
-        x='flipper_length_mm',
-        y='body_mass_g'
+        x='Flipper Length (mm)',
+        y='Body Mass (g)'
     )
 
     st.altair_chart(scatter4 + red_spot4, use_container_width=True)
@@ -176,22 +178,8 @@ with st.expander('Cross Validation'):
     st.dataframe(metrics_df, use_container_width=False)
 
 # Input features expander
-with st.expander('Input features'):
-    bill_length_mm = st.slider('Bill length (mm)', 32.1, 59.6, 43.9)
-    bill_depth_mm = st.slider('Bill depth (mm)', 13.1, 21.5, 17.2)
-    flipper_length_mm = st.slider('Flipper length (mm)', 172.0, 231.0, 201.0)
-    body_mass_g = st.slider('Body mass (g)', 2700.0, 6300.0, 4207.0)
-    gender = st.selectbox('Gender', ('male', 'female'))
-    island = st.selectbox('Island', ('Biscoe', 'Dream', 'Torgersen'))
-
-    # Create a DataFrame for the input features
-    data = {'bill_length_mm': bill_length_mm,
-            'bill_depth_mm': bill_depth_mm,
-            'flipper_length_mm': flipper_length_mm,
-            'body_mass_g': body_mass_g,
-            'sex': gender,
-            'island': island}
-    input_df = pd.DataFrame(data, index=[0])
+with st.expander('Input Features'):
+    st.write(input_df)  # Display the chosen input features in a beautiful table
 
 # Model training and inference
 X = X_numeric  # Ensure X is defined
@@ -201,7 +189,7 @@ clf = SVC(kernel='poly', probability=True)
 clf.fit(X, y)
 
 # Apply model to make predictions
-input_row = input_df.drop(columns=['sex', 'island'])  # Drop non-numeric columns
+input_row = input_df.drop(columns=['Gender', 'Island'])  # Drop non-numeric columns
 prediction_proba = clf.predict_proba(input_row)
 
 # 獲取概率最高的物種的索引

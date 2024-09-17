@@ -101,6 +101,7 @@ with st.expander('Regression Metrics'):
 # Add summary text
     st.markdown("""
     **Summary:**
+    
     Test Mean Squared Error (MSE) is slightly lower than the Train MSE, which suggests that the model is generalizing well and not overfitting.
 
     R² scores suggest that about 57.84% of the variance in the training data and about 52.6% in the test data is explained by your model. This is a moderate level of explanatory power, indicating that while the model captures some relationship, there is still room for improvement.

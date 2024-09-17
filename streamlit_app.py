@@ -78,7 +78,7 @@ with st.expander('Correlation'):
     correlation_df.columns = ['Feature', 'Correlation with y']
 
     # Display the correlation table with wider columns
-    st.write('**Correlation between each feature and the target variable**')
+    st.write('**Correlation between each feature (X) and the target variable (y)**')
     st.dataframe(correlation_df, use_container_width=True)
     
 st.header("",divider="rainbow")

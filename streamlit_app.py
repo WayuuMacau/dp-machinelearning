@@ -59,6 +59,12 @@ with st.expander('Input features'):
     st.write('**Input penguin**')
     st.write(input_df)
 
+# Correlation expander
+with st.expander('Correlation'):
+    correlation_matrix = X_raw.corr()
+    st.write('**Correlation between features**')
+    st.dataframe(correlation_matrix)
+    
 st.header("",divider="rainbow")
 
 # Data preparation

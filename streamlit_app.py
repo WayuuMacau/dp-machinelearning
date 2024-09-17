@@ -135,6 +135,7 @@ with st.expander('Correlation'):
     st.write('**Correlation between each feature and the target variable**')
     st.dataframe(correlation_df, use_container_width=False)
 
+"""
 # SVM Regression Metrics
 with st.expander('Cross Validation'):
     st.caption('Train set 80%, Test set 20%; Sampling without replacement')
@@ -185,7 +186,8 @@ with st.expander('Cross Validation'):
 
     Mean Absolute Error (MAE) values indicate that, on average, the model's predictions are off by about 0.46 for the training set and 0.45 for the test set. This is fairly close, suggesting consistent performance across both datasets.
     """)
-
+"""
+        
 # SVC Classifier Metrics
 with st.expander('SVC Classifier Metrics'):
     st.caption('Train set 80%, Test set 20%; Sampling without replacement')

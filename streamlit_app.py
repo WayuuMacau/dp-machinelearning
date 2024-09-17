@@ -132,7 +132,7 @@ with st.sidebar:
     input_penguins = pd.concat([input_df, X_raw], axis=0)
 
 with st.expander('Input features'):
-    st.write('**Input penguin**')
+    st.write('**What you input will display here in real time**')
     st.dataframe(input_df, use_container_width=False)  # Set to False for narrow width
 
 st.header("", divider="rainbow")

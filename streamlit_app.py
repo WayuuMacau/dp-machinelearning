@@ -35,6 +35,29 @@ with st.expander('Data visualization'):
     ).interactive()
     st.altair_chart(scatter, use_container_width=True)
 
+# Correlation expander
+with st.expander('Correlation'):
+    # Convert the target variable y to numeric (if it's categorical)
+    y_numeric = pd.Series(y_raw.map({'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}), name='species')
+
+    # Combine X and y for correlation calculation
+    combined_df = pd.concat([X_raw, y_numeric], axis=1)
+
+    # Ensure all data is numeric
+    combined_df = combined_df.select_dtypes(include=[np.number])
+
+    # Calculate correlation of each feature with the target variable
+    correlation_with_y = combined_df.corr()['species'].drop('species')
+
+    # Create a DataFrame for better display
+    correlation_df = correlation_with_y.reset_index()
+    correlation_df.columns = ['Feature', 'Correlation with y']
+
+    # Display the correlation table with wider columns
+    st.write('**Correlation between each feature (X) and the target variable (y)**')
+    st.dataframe(correlation_df, use_container_width=True)
+
+
 # Input features
 with st.sidebar:
     st.header('Input features')
@@ -58,28 +81,6 @@ with st.sidebar:
 with st.expander('Input features'):
     st.write('**Input penguin**')
     st.write(input_df)
-
-# Correlation expander
-with st.expander('Correlation'):
-    # Convert the target variable y to numeric (if it's categorical)
-    y_numeric = pd.Series(y_raw.map({'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}), name='species')
-
-    # Combine X and y for correlation calculation
-    combined_df = pd.concat([X_raw, y_numeric], axis=1)
-
-    # Ensure all data is numeric
-    combined_df = combined_df.select_dtypes(include=[np.number])
-
-    # Calculate correlation of each feature with the target variable
-    correlation_with_y = combined_df.corr()['species'].drop('species')
-
-    # Create a DataFrame for better display
-    correlation_df = correlation_with_y.reset_index()
-    correlation_df.columns = ['Feature', 'Correlation with y']
-
-    # Display the correlation table with wider columns
-    st.write('**Correlation between each feature (X) and the target variable (y)**')
-    st.dataframe(correlation_df, use_container_width=True)
     
 st.header("",divider="rainbow")
 

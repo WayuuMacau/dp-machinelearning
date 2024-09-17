@@ -185,20 +185,24 @@ with st.expander('Input Features'):
 X = X_numeric  # Ensure X is defined
 y = y_numeric  # Ensure y is defined
 
+# Train the classifier
 clf = SVC(kernel='poly', probability=True) 
 clf.fit(X, y)
 
-# Apply model to make predictions
+# Prepare input for prediction
 input_row = input_df.drop(columns=['Gender', 'Island'])  # Drop non-numeric columns
+input_row = input_row.reindex(columns=X.columns, fill_value=0)  # Ensure columns match
+
+# Make predictions
 prediction_proba = clf.predict_proba(input_row)
 
-# 獲取概率最高的物種的索引
+# Get the index of the species with the highest probability
 predicted_index = np.argmax(prediction_proba)
 
-# 使用該索引來獲取預測的物種
+# Use that index to get the predicted species
 predicted_species = list({'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}.keys())[predicted_index]
 
-# 顯示預測的物種
+# Display the predicted species
 st.success(f"Predicted Species: {predicted_species}")
 
 # Display prediction probabilities
@@ -206,7 +210,7 @@ df_prediction_proba = pd.DataFrame(prediction_proba, columns={'Adelie': 1, 'Chin
 df_prediction_proba_percentage = df_prediction_proba * 100
 df_prediction_proba_percentage = df_prediction_proba_percentage.round(2)
 
-# 使用漂亮的數據框顯示概率
+# Display probabilities in a nice DataFrame
 st.dataframe(df_prediction_proba_percentage, 
              column_config={ 
                'Adelie': st.column_config.ProgressColumn( 

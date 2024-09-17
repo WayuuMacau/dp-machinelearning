@@ -77,9 +77,12 @@ with st.expander('Correlation'):
     correlation_df = correlation_with_y.reset_index()
     correlation_df.columns = ['Feature', 'Correlation with y']
 
-    # Display the correlation table
+    # Display the correlation table with custom width
     st.write('**Correlation between each feature and the target variable**')
-    st.dataframe(correlation_df)
+    st.markdown(
+        correlation_df.to_html(index=False, escape=False),
+        unsafe_allow_html=True
+    )
 
     
 st.header("",divider="rainbow")

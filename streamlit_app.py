@@ -81,16 +81,17 @@ with st.sidebar:
 
 with st.expander('Input features'):
     st.write('**Input penguin**')
-    st.dataframe(input_df, use_container_width=True)  # Use dataframe for consistent style
-    
-st.header("",divider="rainbow")
+    st.dataframe(input_df, use_container_width=True)
 
 # Data preparation
+# Combine input features with existing features for encoding
+input_penguins = pd.concat([input_df, X_raw], axis=0)  # Ensure this is defined
+
 # Encode X
 encode = ['island', 'sex']
 df_penguins = pd.get_dummies(input_penguins, prefix=encode)
-X = df_penguins[1:]
-input_row = df_penguins[:1]
+X = df_penguins[:-1]  # All but the last row (the input)
+input_row = df_penguins[-1:]  # The last row (the input)
 
 # Encode y
 target_mapper = {'Adelie': 0, 'Chinstrap': 1, 'Gentoo': 2}
@@ -106,19 +107,23 @@ clf.fit(X, y)
 # Apply model to make predictions
 prediction_proba = clf.predict_proba(input_row)
 
-# 獲取概率最高的物種的索引
+# Get the index of the species with the highest probability
 predicted_index = np.argmax(prediction_proba)
 
-# 使用該索引來獲取預測的物種
+# Use that index to get the predicted species
 predicted_species = list(target_mapper.keys())[predicted_index]
 
-# 顯示預測的物種
+# Display the predicted species
 st.success(f"Predicted Species: {predicted_species}")
 
 # Display prediction probabilities
 df_prediction_proba = pd.DataFrame(prediction_proba, columns=target_mapper.keys())
 df_prediction_proba_percentage = df_prediction_proba * 100
 df_prediction_proba_percentage = df_prediction_proba_percentage.round(2)
+
+# Display the probabilities in a nice DataFrame format
+st.dataframe(df_prediction_proba_percentage, use_container_width=True)
+
 
 # 使用漂亮的數據框顯示概率
 st.dataframe(df_prediction_proba_percentage, 

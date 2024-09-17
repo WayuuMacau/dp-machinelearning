@@ -78,9 +78,13 @@ with st.sidebar:
     }
     input_df = pd.DataFrame(data, index=[0])
 
+# Ensure input_df is defined before using it
 with st.expander('Input features'):
     st.write('**Input penguin**')
     st.dataframe(input_df, use_container_width=False)  # Set to False for narrower display
+
+# Combine input features with existing features for encoding
+input_penguins = pd.concat([input_df, X_raw], axis=0)
 
 st.header("",divider="rainbow")
 

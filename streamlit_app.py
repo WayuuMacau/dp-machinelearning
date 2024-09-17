@@ -59,6 +59,8 @@ with st.expander('Data visualization'):
     }
     df['color'] = df['species'].map(colors)
 
+    st.caption('Below red circles position are the parameters chosen by left sidebar.')
+    
     # 第一個散點圖
     scatter1 = alt.Chart(df).mark_circle(size=60).encode(
         x='bill_length_mm',
@@ -199,7 +201,7 @@ with st.expander('SVC Classifier Metrics'):
     """)
     
 with st.expander('Input features'):
-    st.write('**What you input will display here in real time**')
+    st.caption('Below values are the parameters chosen by left sidebar.')
     st.dataframe(input_df, use_container_width=False)  # Set to False for narrow width
 
 st.header("", divider="rainbow")

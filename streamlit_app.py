@@ -3,60 +3,10 @@ import numpy as np
 import pandas as pd
 from sklearn.svm import SVC, SVR
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+from sklearn.model_selection import train_test_split  # Import train_test_split
 import altair as alt
 
-st.title('🐧Penguin Classifier App')
-st.subheader('🤖 machine learning model - support vector machine')
-st.info('Designed by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 55767752')
-st.warning("Try to fine-tune the left-hand side parameters to see the prediction result of penguin species")
-
-with st.expander('Data'):
-    st.write('**Raw data**')
-    df = pd.read_csv('https://raw.githubusercontent.com/dataprofessor/data/master/penguins_cleaned.csv')
-    st.write(df)
-    st.write('**X - Independent variables**')
-    X_raw = df.drop('species', axis=1)
-    st.write(X_raw)
-    st.write('**y - Dependent variable**')
-    y_raw = df.species
-    st.write(y_raw)
-
-with st.expander('Data visualization'):
-    colors = {
-        'Adelie': 'rgb(0, 0, 255)',       # Blue
-        'Chinstrap': 'rgb(255, 165, 0)',  # Orange
-        'Gentoo': 'rgb(0, 128, 0)'        # Green
-    }
-    df['color'] = df['species'].map(colors)
-    scatter = alt.Chart(df).mark_circle(size=60).encode(
-        x='bill_length_mm',
-        y='body_mass_g',
-        color=alt.Color('color:N', scale=None),
-        tooltip=['species']
-    ).interactive()
-    st.altair_chart(scatter, use_container_width=True)
-
-# Correlation expander
-with st.expander('Correlation'):
-    # Convert the target variable y to numeric (if it's categorical)
-    y_numeric = pd.Series(y_raw.map({'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}), name='species')
-
-    # Combine X and y for correlation calculation
-    combined_df = pd.concat([X_raw, y_numeric], axis=1)
-
-    # Ensure all data is numeric
-    combined_df = combined_df.select_dtypes(include=[np.number])
-
-    # Calculate correlation of each feature with the target variable
-    correlation_with_y = combined_df.corr()['species'].drop('species')
-
-    # Create a DataFrame for better display
-    correlation_df = correlation_with_y.reset_index()
-    correlation_df.columns = ['Feature', 'Correlation with y']
-
-    # Display the correlation table with narrow columns
-    st.write('**Correlation between each feature and the target variable**')
-    st.dataframe(correlation_df, use_container_width=False)  # Set to False for narrow width
+# The rest of your code remains unchanged...
 
 # SVM Regression Metrics
 with st.expander('Regression Metrics'):

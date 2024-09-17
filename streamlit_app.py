@@ -175,60 +175,30 @@ with st.expander('Cross Validation'):
     st.write('**Regression Metrics**')
     st.dataframe(metrics_df, use_container_width=False)
 
-# Add summary text
-st.markdown("""
-**Summary:**
-
-Test Mean Squared Error (MSE) is slightly lower than the Train MSE, which suggests that the model is generalizing well and not overfitting.
-
-R² scores suggest that about 57.84% of the variance in the training data and about 52.6% in the test data is explained by your model. This is a moderate level of explanatory power, indicating that while the model captures some relationship, there is still room for improvement.
-
-Mean Absolute Error (MAE) values indicate that, on average, the model's predictions are off by about 0.46 for the training set and 0.45 for the test set. This is fairly close, suggesting consistent performance across both datasets.
-""")
-
 # Model training and inference
+X = X_numeric  # Ensure X is defined
+y = y_numeric  # Ensure y is defined
+
 clf = SVC(kernel='poly', probability=True) 
 clf.fit(X, y)
 
 # Apply model to make predictions
+input_row = input_df.drop(columns=['sex', 'island'])  # Drop non-numeric columns
 prediction_proba = clf.predict_proba(input_row)
 
 # 獲取概率最高的物種的索引
 predicted_index = np.argmax(prediction_proba)
 
 # 使用該索引來獲取預測的物種
-predicted_species = list(target_mapper.keys())[predicted_index]
+predicted_species = list({'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}.keys())[predicted_index]
 
 # 顯示預測的物種
 st.success(f"Predicted Species: {predicted_species}")
 
 # Display prediction probabilities
-df_prediction_proba = pd.DataFrame(prediction_proba, columns=target_mapper.keys())
+df_prediction_proba = pd.DataFrame(prediction_proba, columns={'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}.keys())
 df_prediction_proba_percentage = df_prediction_proba * 100
 df_prediction_proba_percentage = df_prediction_proba_percentage.round(2)
 
 # 使用漂亮的數據框顯示概率
-st.dataframe(df_prediction_proba_percentage, 
-             column_config={ 
-               'Adelie': st.column_config.ProgressColumn( 
-                 'Adelie (%)', 
-                 format='%f', 
-                 width='medium', 
-                 min_value=0, 
-                 max_value=100 
-               ), 
-               'Chinstrap': st.column_config.ProgressColumn( 
-                 'Chinstrap (%)', 
-                 format='%f', 
-                 width='medium', 
-                 min_value=0, 
-                 max_value=100 
-               ), 
-               'Gentoo': st.column_config.ProgressColumn( 
-                 'Gentoo (%)', 
-                 format='%f', 
-                 width='medium', 
-                 min_value=0, 
-                 max_value=100 
-               )
-             })
+st.dataframe(df_prediction_proba_percentage)

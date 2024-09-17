@@ -35,13 +35,25 @@ with st.expander('Data visualization'):
         'Gentoo': 'rgb(0, 128, 0)'        # Green
     }
     df['color'] = df['species'].map(colors)
-    scatter = alt.Chart(df).mark_circle(size=60).encode(
+
+    # 第一個散點圖
+    scatter1 = alt.Chart(df).mark_circle(size=60).encode(
         x='bill_length_mm',
         y='body_mass_g',
         color=alt.Color('color:N', scale=None),
         tooltip=['species']
     ).interactive()
-    st.altair_chart(scatter, use_container_width=True)
+    st.altair_chart(scatter1, use_container_width=True)
+
+    # 第二個散點圖
+    scatter2 = alt.Chart(df).mark_circle(size=60).encode(
+        x='bill_depth_mm',        # Bill depth
+        y='flipper_length_mm',    # Flipper length
+        color=alt.Color('color:N', scale=None),
+        tooltip=['species']
+    ).interactive()
+    st.altair_chart(scatter2, use_container_width=True)
+
 
 # Correlation expander
 with st.expander('Correlation'):

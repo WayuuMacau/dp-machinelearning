@@ -1,13 +1,13 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+from sklearn.svm import SVC, SVR
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.model_selection import train_test_split
-from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import altair as alt
 
 st.title('🐧Penguin Classifier App')
-st.subheader('🤖 machine learning model - support vector machine classifier')
+st.subheader('🤖 machine learning model - support vector machine')
 st.info('Designed by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 55767752')
 st.warning("Try to fine-tune the left-hand side parameters to see the prediction result of penguin species")
 
@@ -27,27 +27,6 @@ with st.expander('Data'):
 
     # Combine X and y for correlation calculation
     combined_df = pd.concat([X_raw, y_numeric], axis=1)
-
-# Input features
-with st.sidebar:
-    st.header('Input features')
-    bill_length_mm = st.slider('Bill length (mm)', 32.1, 59.6, 43.9)
-    bill_depth_mm = st.slider('Bill depth (mm)', 13.1, 21.5, 17.2)
-    flipper_length_mm = st.slider('Flipper length (mm)', 172.0, 231.0, 201.0)
-    body_mass_g = st.slider('Body mass (g)', 2700.0, 6300.0, 4207.0)
-    gender = st.selectbox('Gender', ('male', 'female'))
-    island = st.selectbox('Island', ('Biscoe', 'Dream', 'Torgersen'))
-
-    # Create a DataFrame for the input features
-    input_data = {
-        'Bill Length (mm)': bill_length_mm,
-        'Bill Depth (mm)': bill_depth_mm,
-        'Flipper Length (mm)': flipper_length_mm,
-        'Body Mass (g)': body_mass_g,
-        'Gender': gender,
-        'Island': island
-    }
-    input_df = pd.DataFrame(input_data, index=[0])
 
 with st.expander('Data visualization'):
     colors = {
@@ -137,101 +116,141 @@ with st.expander('Correlation'):
     st.write('**Correlation between each feature and the target variable**')
     st.dataframe(correlation_df, use_container_width=False)
 
-# SVM Classification Metrics
+# SVM Regression Metrics
 with st.expander('Cross Validation'):
     st.caption('Train set 80%, Test set 20%; Sampling without replacement')
-    # Prepare data for classification
+    # Prepare data for regression
     X_numeric = combined_df.drop('species', axis=1)
     y_numeric = combined_df['species']
 
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X_numeric, y_numeric, test_size=0.2, random_state=42)
 
-    # Create and fit the SVM classifier
-    svm_classifier = SVC(kernel='rbf', probability=True)
-    svm_classifier.fit(X_train, y_train)
+    # Create and fit the SVM regressor
+    svm_regressor = SVR(kernel='rbf')  # You can also try 'rbf' or other kernels
+    svm_regressor.fit(X_train, y_train)
 
     # Make predictions
-    y_train_pred = svm_classifier.predict(X_train)
-    y_test_pred = svm_classifier.predict(X_test)
+    y_train_pred = svm_regressor.predict(X_train)
+    y_test_pred = svm_regressor.predict(X_test)
 
     # Calculate metrics
-    train_accuracy = accuracy_score(y_train, y_train_pred)
-    test_accuracy = accuracy_score(y_test, y_test_pred)
-    train_precision = precision_score(y_train, y_train_pred, average='weighted')
-    test_precision = precision_score(y_test, y_test_pred, average='weighted')
-    train_recall = recall_score(y_train, y_train_pred, average='weighted')
-    test_recall = recall_score(y_test, y_test_pred, average='weighted')
-    train_f1 = f1_score(y_train, y_train_pred, average='weighted')
-    test_f1 = f1_score(y_test, y_test_pred, average='weighted')
+    train_mse = mean_squared_error(y_train, y_train_pred)
+    test_mse = mean_squared_error(y_test, y_test_pred)
+    train_r2 = r2_score(y_train, y_train_pred)
+    test_r2 = r2_score(y_test, y_test_pred)
+    train_mae = mean_absolute_error(y_train, y_train_pred)
+    test_mae = mean_absolute_error(y_test, y_test_pred)
 
     # Create a DataFrame for the metrics
     metrics_df = pd.DataFrame({
-        'Metric': ['Accuracy', 'Precision', 'Recall', 'F1 Score'],
-        'Train': [train_accuracy, train_precision, train_recall, train_f1],
-        'Test': [test_accuracy, test_precision, test_recall, test_f1]
+        'Metric': ['MSE', 'R² Score', 'MAE'],
+        'Train': [train_mse, train_r2, train_mae],
+        'Test': [test_mse, test_r2, test_mae]
     })
 
     # Set the Metric column as the index
     metrics_df.set_index('Metric', inplace=True)
 
     # Display the metrics in a table
-    st.write('**Classification Metrics**')
+    st.write('**Regression Metrics**')
     st.dataframe(metrics_df, use_container_width=False)
 
-# Input features expander
-with st.expander('Input Features'):
-    st.write(input_df)  # Display the chosen input features in a beautiful table
+# Add summary text
+    st.markdown("""
+    **Summary:**
+    
+    Test Mean Squared Error (MSE) is slightly lower than the Train MSE, which suggests that the model is generalizing well and not overfitting.
+
+    R² scores suggest that about 57.84% of the variance in the training data and about 52.6% in the test data is explained by your model. This is a moderate level of explanatory power, indicating that while the model captures some relationship, there is still room for improvement.
+
+    Mean Absolute Error (MAE) values indicate that, on average, the model's predictions are off by about 0.46 for the training set and 0.45 for the test set. This is fairly close, suggesting consistent performance across both datasets.
+    """)
+
+
+# Input features
+with st.sidebar:
+    st.header('Input features')
+    bill_length_mm = st.slider('Bill length (mm)', 32.1, 59.6, 43.9)
+    bill_depth_mm = st.slider('Bill depth (mm)', 13.1, 21.5, 17.2)
+    flipper_length_mm = st.slider('Flipper length (mm)', 172.0, 231.0, 201.0)
+    body_mass_g = st.slider('Body mass (g)', 2700.0, 6300.0, 4207.0)
+    gender = st.selectbox('Gender', ('male', 'female'))
+    island = st.selectbox('Island', ('Biscoe', 'Dream', 'Torgersen'))
+    
+    # Create a DataFrame for the input features
+    data = {'bill_length_mm': bill_length_mm,
+            'bill_depth_mm': bill_depth_mm,
+            'flipper_length_mm': flipper_length_mm,
+            'body_mass_g': body_mass_g,
+            'sex': gender,
+            'island': island}
+    input_df = pd.DataFrame(data, index=[0])
+    input_penguins = pd.concat([input_df, X_raw], axis=0)
+
+with st.expander('Input features'):
+    st.write('**What you input will display here in real time**')
+    st.dataframe(input_df, use_container_width=False)  # Set to False for narrow width
+
+st.header("", divider="rainbow")
+
+# Data preparation
+# Encode X
+encode = ['island', 'sex']
+df_penguins = pd.get_dummies(input_penguins, prefix=encode)
+X = df_penguins[1:]
+input_row = df_penguins[:1]
+
+# Encode y
+target_mapper = {'Adelie': 0, 'Chinstrap': 1, 'Gentoo': 2}
+def target_encode(val):
+    return target_mapper[val]
+
+y = y_raw.apply(target_encode)
 
 # Model training and inference
-X = X_numeric  # Ensure X is defined
-y = y_numeric  # Ensure y is defined
-
-# Train the classifier
-clf = SVC(kernel='rbf', probability=True)  # Use SVC with probability=True for classification
+clf = SVC(kernel='poly', probability=True) 
 clf.fit(X, y)
 
-# Prepare input for prediction
-input_row = input_df.drop(columns=['Gender', 'Island'])  # Drop non-numeric columns
-input_row = input_row.reindex(columns=X.columns, fill_value=0)  # Ensure columns match
-
-# Make predictions
+# Apply model to make predictions
 prediction_proba = clf.predict_proba(input_row)
 
-# Get the predicted species
-species_map = {1: 'Adelie', 2: 'Chinstrap', 3: 'Gentoo'}
-predicted_species = species_map[clf.predict(input_row)[0]]
+# 獲取概率最高的物種的索引
+predicted_index = np.argmax(prediction_proba)
 
-# Display the predicted species
-st.success(f"Predicted Species：{predicted_species}")
+# 使用該索引來獲取預測的物種
+predicted_species = list(target_mapper.keys())[predicted_index]
+
+# 顯示預測的物種
+st.success(f"Predicted Species: {predicted_species}")
 
 # Display prediction probabilities
-df_prediction_proba = pd.DataFrame(prediction_proba, columns=species_map.values())
+df_prediction_proba = pd.DataFrame(prediction_proba, columns=target_mapper.keys())
 df_prediction_proba_percentage = df_prediction_proba * 100
 df_prediction_proba_percentage = df_prediction_proba_percentage.round(2)
 
-# Display probabilities in a nice DataFrame
-st.dataframe(df_prediction_proba_percentage,
-             column_config={
-               'Adelie': st.column_config.ProgressColumn(
-                 'Adelie (%)',
-                 format='%f',
-                 width='medium',
-                 min_value=0,
-                 max_value=100
-               ),
-               'Chinstrap': st.column_config.ProgressColumn(
-                 'Chinstrap (%)',
-                 format='%f',
-                 width='medium',
-                 min_value=0,
-                 max_value=100
-               ),
-               'Gentoo': st.column_config.ProgressColumn(
-                 'Gentoo (%)',
-                 format='%f',
-                 width='medium',
-                 min_value=0,
-                 max_value=100
+# 使用漂亮的數據框顯示概率
+st.dataframe(df_prediction_proba_percentage, 
+             column_config={ 
+               'Adelie': st.column_config.ProgressColumn( 
+                 'Adelie (%)', 
+                 format='%f', 
+                 width='medium', 
+                 min_value=0, 
+                 max_value=100 
+               ), 
+               'Chinstrap': st.column_config.ProgressColumn( 
+                 'Chinstrap (%)', 
+                 format='%f', 
+                 width='medium', 
+                 min_value=0, 
+                 max_value=100 
+               ), 
+               'Gentoo': st.column_config.ProgressColumn( 
+                 'Gentoo (%)', 
+                 format='%f', 
+                 width='medium', 
+                 min_value=0, 
+                 max_value=100 
                )
-             })
+             })  # Ensure this is properly closed

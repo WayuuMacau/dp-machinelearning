@@ -59,7 +59,7 @@ with st.expander('Data visualization'):
     }
     df['color'] = df['species'].map(colors)
 
-    st.caption('Below red circles position are the parameters chosen by left sidebar.')
+    st.caption('Below coordinates of red circles are the parameters chosen by left sidebar.')
     
     # 第一個散點圖
     scatter1 = alt.Chart(df).mark_circle(size=60).encode(

@@ -183,12 +183,12 @@ with st.expander('Cross Validation'):
 with st.expander('Input Features'):
     st.write(input_df)  # Display the chosen input features in a beautiful table
 
-# Model training and inference (modified for SVC)
+# Model training and inference
 X = X_numeric  # Ensure X is defined
 y = y_numeric  # Ensure y is defined
 
 # Train the classifier
-clf = SVC(probability=True)  # Use SVC with probability=True for classification
+clf = SVC(kernel='rbf', probability=True)  # Use SVC with probability=True for classification
 clf.fit(X, y)
 
 # Prepare input for prediction
@@ -198,17 +198,15 @@ input_row = input_row.reindex(columns=X.columns, fill_value=0)  # Ensure columns
 # Make predictions
 prediction_proba = clf.predict_proba(input_row)
 
-# Get the index of the species with the highest probability
-predicted_index = np.argmax(prediction_proba)
-
-# Use that index to get the predicted species
-predicted_species = list({'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}.keys())[predicted_index]
+# Get the predicted species
+species_map = {1: 'Adelie', 2: 'Chinstrap', 3: 'Gentoo'}
+predicted_species = species_map[clf.predict(input_row)[0]]
 
 # Display the predicted species
-st.success(f"預測的鳥類：{predicted_species}")
+st.success(f"Predicted Species：{predicted_species}")
 
 # Display prediction probabilities
-df_prediction_proba = pd.DataFrame(prediction_proba, columns={'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}.keys())
+df_prediction_proba = pd.DataFrame(prediction_proba, columns=species_map.values())
 df_prediction_proba_percentage = df_prediction_proba * 100
 df_prediction_proba_percentage = df_prediction_proba_percentage.round(2)
 

@@ -135,4 +135,11 @@ st.dataframe(df_prediction_proba_percentage,
                  min_value=0, 
                  max_value=100 
                ), 
-               'Gentoo': st.column_config.ProgressColumn...
+               'Gentoo': st.column_config.ProgressColumn( 
+                 'Gentoo (%)', 
+                 format='%f', 
+                 width='medium', 
+                 min_value=0, 
+                 max_value=100 
+               )
+             }) 

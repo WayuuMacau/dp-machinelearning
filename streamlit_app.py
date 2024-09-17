@@ -61,11 +61,17 @@ with st.expander('Input features'):
 
 # Correlation expander
 with st.expander('Correlation'):
-    # Select only numeric columns for correlation
-    numeric_X_raw = X_raw.select_dtypes(include=[np.number])
-    correlation_matrix = numeric_X_raw.corr()
+    # Combine X and y for correlation calculation
+    y_numeric = pd.Series(y_raw.map({'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}), name='species')  # Convert species to numeric
+    combined_df = pd.concat([X_raw, y_numeric], axis=1)
+    
+    # Calculate correlation
+    correlation_matrix = combined_df.corr()
+    
+    # Display correlation between features and target variable
     st.write('**Correlation between features X and y**')
-    st.dataframe(correlation_matrix)
+    st.dataframe(correlation_matrix[['species']].drop('species', axis=1))  # Show correlations with y
+
     
 st.header("",divider="rainbow")
 

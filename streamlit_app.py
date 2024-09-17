@@ -54,6 +54,14 @@ with st.expander('Data visualization'):
     ).interactive()
     st.altair_chart(scatter2, use_container_width=True)
 
+    scatter3 = alt.Chart(df).mark_circle(size=60).encode(
+        x='bill_depth_mm',      
+        y='bill_length_mm',   
+        color=alt.Color('color:N', scale=None),
+        tooltip=['species']
+    ).interactive()
+    st.altair_chart(scatter3, use_container_width=True)
+
 
 # Correlation expander
 with st.expander('Correlation'):

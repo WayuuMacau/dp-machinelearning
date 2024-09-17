@@ -11,10 +11,16 @@ st.subheader('🤖 machine learning model - support vector machine')
 st.info('Designed by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 55767752')
 st.warning("Try to fine-tune the left-hand side parameters to see the prediction result of penguin species")
 
-# Load data
+# Load and prepare data
 df = pd.read_csv('https://raw.githubusercontent.com/dataprofessor/data/master/penguins_cleaned.csv')
 X_raw = df.drop('species', axis=1)
 y_raw = df.species
+
+# Convert the target variable y to numeric
+y_numeric = pd.Series(y_raw.map({'Adelie': 1, 'Chinstrap': 2, 'Gentoo': 3}), name='species')
+
+# Combine X and y for correlation calculation
+combined_df = pd.concat([X_raw, y_numeric], axis=1)
 
 # Input features
 with st.sidebar:
@@ -25,7 +31,7 @@ with st.sidebar:
     body_mass_g = st.slider('Body mass (g)', 2700.0, 6300.0, 4207.0)
     gender = st.selectbox('Gender', ('male', 'female'))
     island = st.selectbox('Island', ('Biscoe', 'Dream', 'Torgersen'))
-    
+
 # Create a DataFrame for the input features
 input_data = {
     'bill_length_mm': [bill_length_mm],
@@ -37,7 +43,14 @@ input_data = {
 }
 input_df = pd.DataFrame(input_data)
 
-# Rest of your code (Data visualization, model training, etc.)
+with st.expander('Data'):
+    st.write('**Raw data**')
+    st.write(df)
+    st.write('**X - Independent variables**')
+    st.write(X_raw)
+    st.write('**y - Dependent variable**')
+    st.write(y_raw)
+
 with st.expander('Data visualization'):
     colors = {
         'Adelie': 'rgb(0, 0, 255)',       # Blue
@@ -54,7 +67,6 @@ with st.expander('Data visualization'):
         tooltip=['species']
     ).interactive()
 
-    # Add red circle for input data
     red_circle1 = alt.Chart(input_df).mark_circle(size=100, color='red').encode(
         x='bill_length_mm',
         y='body_mass_g'
@@ -62,13 +74,58 @@ with st.expander('Data visualization'):
 
     st.altair_chart(scatter1 + red_circle1, use_container_width=True)
 
+    # 第二個散點圖
+    scatter2 = alt.Chart(df).mark_circle(size=60).encode(
+        x='bill_depth_mm',
+        y='flipper_length_mm',
+        color=alt.Color('color:N', scale=None),
+        tooltip=['species']
+    ).interactive()
+
+    red_circle2 = alt.Chart(input_df).mark_circle(size=100, color='red').encode(
+        x='bill_depth_mm',
+        y='flipper_length_mm'
+    )
+
+    st.altair_chart(scatter2 + red_circle2, use_container_width=True)
+
+    # 第三個散點圖
+    scatter3 = alt.Chart(df).mark_circle(size=60).encode(
+        x='bill_depth_mm',
+        y='bill_length_mm',
+        color=alt.Color('color:N', scale=None),
+        tooltip=['species']
+    ).interactive()
+
+    red_circle3 = alt.Chart(input_df).mark_circle(size=100, color='red').encode(
+        x='bill_depth_mm',
+        y='bill_length_mm'
+    )
+
+    st.altair_chart(scatter3 + red_circle3, use_container_width=True)
+
+    # 第四個散點圖
+    scatter4 = alt.Chart(df).mark_circle(size=60).encode(
+        x='flipper_length_mm',
+        y='body_mass_g',
+        color=alt.Color('color:N', scale=None),
+        tooltip=['species']
+    ).interactive()
+
+    red_circle4 = alt.Chart(input_df).mark_circle(size=100, color='red').encode(
+        x='flipper_length_mm',
+        y='body_mass_g'
+    )
+
+    st.altair_chart(scatter4 + red_circle4, use_container_width=True)
+
 # Correlation expander
 with st.expander('Correlation'):
     # Ensure all data is numeric
-    combined_df = combined_df.select_dtypes(include=[np.number])
+    combined_df_numeric = combined_df.select_dtypes(include=[np.number])
 
     # Calculate correlation of each feature with the target variable
-    correlation_with_y = combined_df.corr()['species'].drop('species')
+    correlation_with_y = combined_df_numeric.corr()['species'].drop('species')
 
     # Create a DataFrame for better display
     correlation_df = correlation_with_y.reset_index()
@@ -82,14 +139,14 @@ with st.expander('Correlation'):
 with st.expander('Cross Validation'):
     st.caption('Train set 80%, Test set 20%; Sampling without replacement')
     # Prepare data for regression
-    X_numeric = combined_df.drop('species', axis=1)
-    y_numeric = combined_df['species']
+    X_numeric = combined_df_numeric.drop('species', axis=1)
+    y_numeric = combined_df_numeric['species']
 
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X_numeric, y_numeric, test_size=0.2, random_state=42)
 
     # Create and fit the SVM regressor
-    svm_regressor = SVR(kernel='rbf')  # You can also try 'rbf' or other kernels
+    svm_regressor = SVR(kernel='rbf')
     svm_regressor.fit(X_train, y_train)
 
     # Make predictions
@@ -118,7 +175,7 @@ with st.expander('Cross Validation'):
     st.write('**Regression Metrics**')
     st.dataframe(metrics_df, use_container_width=False)
 
-# Add summary text
+    # Add summary text
     st.markdown("""
     **Summary:**
     
@@ -129,27 +186,6 @@ with st.expander('Cross Validation'):
     Mean Absolute Error (MAE) values indicate that, on average, the model's predictions are off by about 0.46 for the training set and 0.45 for the test set. This is fairly close, suggesting consistent performance across both datasets.
     """)
 
-
-# Input features
-with st.sidebar:
-    st.header('Input features')
-    bill_length_mm = st.slider('Bill length (mm)', 32.1, 59.6, 43.9)
-    bill_depth_mm = st.slider('Bill depth (mm)', 13.1, 21.5, 17.2)
-    flipper_length_mm = st.slider('Flipper length (mm)', 172.0, 231.0, 201.0)
-    body_mass_g = st.slider('Body mass (g)', 2700.0, 6300.0, 4207.0)
-    gender = st.selectbox('Gender', ('male', 'female'))
-    island = st.selectbox('Island', ('Biscoe', 'Dream', 'Torgersen'))
-    
-    # Create a DataFrame for the input features
-    data = {'bill_length_mm': bill_length_mm,
-            'bill_depth_mm': bill_depth_mm,
-            'flipper_length_mm': flipper_length_mm,
-            'body_mass_g': body_mass_g,
-            'sex': gender,
-            'island': island}
-    input_df = pd.DataFrame(data, index=[0])
-    input_penguins = pd.concat([input_df, X_raw], axis=0)
-
 with st.expander('Input features'):
     st.write('**What you input will display here in real time**')
     st.dataframe(input_df, use_container_width=False)  # Set to False for narrow width
@@ -159,7 +195,7 @@ st.header("", divider="rainbow")
 # Data preparation
 # Encode X
 encode = ['island', 'sex']
-df_penguins = pd.get_dummies(input_penguins, prefix=encode)
+df_penguins = pd.get_dummies(pd.concat([input_df, X_raw], axis=0), prefix=encode)
 X = df_penguins[1:]
 input_row = df_penguins[:1]
 
@@ -177,13 +213,13 @@ clf.fit(X, y)
 # Apply model to make predictions
 prediction_proba = clf.predict_proba(input_row)
 
-# 獲取概率最高的物種的索引
+# Get the index of the species with the highest probability
 predicted_index = np.argmax(prediction_proba)
 
-# 使用該索引來獲取預測的物種
+# Use that index to get the predicted species
 predicted_species = list(target_mapper.keys())[predicted_index]
 
-# 顯示預測的物種
+# Display the predicted species
 st.success(f"Predicted Species: {predicted_species}")
 
 # Display prediction probabilities
@@ -191,7 +227,7 @@ df_prediction_proba = pd.DataFrame(prediction_proba, columns=target_mapper.keys(
 df_prediction_proba_percentage = df_prediction_proba * 100
 df_prediction_proba_percentage = df_prediction_proba_percentage.round(2)
 
-# 使用漂亮的數據框顯示概率
+# Display probabilities in a nice DataFrame
 st.dataframe(df_prediction_proba_percentage, 
              column_config={ 
                'Adelie': st.column_config.ProgressColumn( 
@@ -215,4 +251,4 @@ st.dataframe(df_prediction_proba_percentage,
                  min_value=0, 
                  max_value=100 
                )
-             })  # Ensure this is properly closed
+             })

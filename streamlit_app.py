@@ -186,6 +186,68 @@ with st.expander('Cross Validation'):
     Mean Absolute Error (MAE) values indicate that, on average, the model's predictions are off by about 0.46 for the training set and 0.45 for the test set. This is fairly close, suggesting consistent performance across both datasets.
     """)
 
+# SVC Classifier Metrics
+with st.expander('SVC Classifier Metrics'):
+    st.caption('Train set 80%, Test set 20%; Sampling without replacement')
+    
+    # Prepare data for classification
+    X_numeric = combined_df_numeric.drop('species', axis=1)
+    y_numeric = combined_df_numeric['species']
+
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X_numeric, y_numeric, test_size=0.2, random_state=42)
+
+    # Create and fit the SVC classifier
+    svc_classifier = SVC(kernel='rbf', probability=True)
+    svc_classifier.fit(X_train, y_train)
+
+    # Make predictions
+    y_train_pred = svc_classifier.predict(X_train)
+    y_test_pred = svc_classifier.predict(X_test)
+
+    # Calculate metrics
+    from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+    train_accuracy = accuracy_score(y_train, y_train_pred)
+    test_accuracy = accuracy_score(y_test, y_test_pred)
+    
+    train_precision = precision_score(y_train, y_train_pred, average='weighted')
+    test_precision = precision_score(y_test, y_test_pred, average='weighted')
+    
+    train_recall = recall_score(y_train, y_train_pred, average='weighted')
+    test_recall = recall_score(y_test, y_test_pred, average='weighted')
+    
+    train_f1 = f1_score(y_train, y_train_pred, average='weighted')
+    test_f1 = f1_score(y_test, y_test_pred, average='weighted')
+
+    # Create a DataFrame for the metrics
+    metrics_df = pd.DataFrame({
+        'Metric': ['Accuracy', 'Precision', 'Recall', 'F1-score'],
+        'Train': [train_accuracy, train_precision, train_recall, train_f1],
+        'Test': [test_accuracy, test_precision, test_recall, test_f1]
+    })
+
+    # Set the Metric column as the index
+    metrics_df.set_index('Metric', inplace=True)
+
+    # Display the metrics in a table
+    st.write('**SVC Classifier Metrics**')
+    st.dataframe(metrics_df.style.format("{:.4f}"), use_container_width=False)
+
+    # Add summary text
+    st.markdown("""
+    **Summary:**
+    
+    The SVC classifier shows good performance on both the training and test sets. 
+    
+    - Accuracy: The model correctly classifies a high percentage of samples in both sets, with slightly better performance on the training data.
+    - Precision: The model has a high precision, indicating a low false positive rate.
+    - Recall: The high recall suggests that the model is effective at identifying positive cases.
+    - F1-score: The F1-score, being the harmonic mean of precision and recall, indicates a good balance between precision and recall.
+
+    The close values between train and test metrics suggest that the model is generalizing well and not overfitting significantly. However, the slightly higher values for the training set indicate there might be a small amount of overfitting, which is common and often acceptable if not too large.
+    """)
+    
 with st.expander('Input features'):
     st.write('**What you input will display here in real time**')
     st.dataframe(input_df, use_container_width=False)  # Set to False for narrow width

@@ -1,7 +1,8 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-from sklearn.svm import SVC
+from sklearn.svm import SVC, SVR
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import altair as alt
 
 st.title('🐧Penguin Classifier App')
@@ -56,6 +57,37 @@ with st.expander('Correlation'):
     # Display the correlation table with narrow columns
     st.write('**Correlation between each feature and the target variable**')
     st.dataframe(correlation_df, use_container_width=False)  # Set to False for narrow width
+
+# SVM Regression Metrics
+with st.expander('Regression Metrics'):
+    # Prepare data for regression
+    X_numeric = combined_df.drop('species', axis=1)
+    y_numeric = combined_df['species']
+
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X_numeric, y_numeric, test_size=0.2, random_state=42)
+
+    # Create and fit the SVM regressor
+    svm_regressor = SVR(kernel='linear')  # You can also try 'rbf' or other kernels
+    svm_regressor.fit(X_train, y_train)
+
+    # Make predictions
+    y_pred = svm_regressor.predict(X_test)
+
+    # Calculate metrics
+    mse = mean_squared_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+    mae = mean_absolute_error(y_test, y_pred)
+
+    # Create a DataFrame for the metrics
+    metrics_df = pd.DataFrame({
+        'Metric': ['Mean Squared Error', 'R² Score', 'Mean Absolute Error'],
+        'Value': [mse, r2, mae]
+    })
+
+    # Display the metrics in a table
+    st.write('**Regression Metrics**')
+    st.dataframe(metrics_df, use_container_width=False)
 
 # Input features
 with st.sidebar:

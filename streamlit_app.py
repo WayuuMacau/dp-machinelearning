@@ -86,13 +86,18 @@ with st.expander('Regression Metrics'):
 
     # Create a DataFrame for the metrics
     metrics_df = pd.DataFrame({
-        'Metric': ['Train MSE', 'Test MSE', 'Train R² Score', 'Test R² Score', 'Train MAE', 'Test MAE'],
-        'Value': [train_mse, test_mse, train_r2, test_r2, train_mae, test_mae]
+        'Metric': ['MSE', 'R² Score', 'MAE'],
+        'Train': [train_mse, train_r2, train_mae],
+        'Test': [test_mse, test_r2, test_mae]
     })
+
+    # Set the Metric column as the index
+    metrics_df.set_index('Metric', inplace=True)
 
     # Display the metrics in a table
     st.write('**Regression Metrics**')
     st.dataframe(metrics_df, use_container_width=False)
+
 
 
 # Input features

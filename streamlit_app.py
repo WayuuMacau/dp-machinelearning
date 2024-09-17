@@ -54,10 +54,9 @@ with st.expander('Correlation'):
     correlation_df.columns = ['Feature', 'Correlation with y']
 
     # Display the correlation table with wider columns
-    st.write('**Correlation between each feature (X) and the target variable (y)**')
+    st.write('**Correlation between each feature and the target variable**')
     st.dataframe(correlation_df, use_container_width=True)
-
-
+    
 # Input features
 with st.sidebar:
     st.header('Input features')
@@ -69,29 +68,27 @@ with st.sidebar:
     gender = st.selectbox('Gender', ('male', 'female'))
     
     # Create a DataFrame for the input features
-    data = {
-        'island': island,
-        'bill_length_mm': bill_length_mm,
-        'bill_depth_mm': bill_depth_mm,
-        'flipper_length_mm': flipper_length_mm,
-        'body_mass_g': body_mass_g,
-        'sex': gender
-    }
+    data = {'island': island,
+            'bill_length_mm': bill_length_mm,
+            'bill_depth_mm': bill_depth_mm,
+            'flipper_length_mm': flipper_length_mm,
+            'body_mass_g': body_mass_g,
+            'sex': gender}
     input_df = pd.DataFrame(data, index=[0])
+    input_penguins = pd.concat([input_df, X_raw], axis=0)
 
 with st.expander('Input features'):
     st.write('**Input penguin**')
-    st.dataframe(input_df, use_container_width=True)
+    st.write(input_df)
+
+st.header("",divider="rainbow")
 
 # Data preparation
-# Combine input features with existing features for encoding
-input_penguins = pd.concat([input_df, X_raw], axis=0)  # Ensure this is defined
-
 # Encode X
 encode = ['island', 'sex']
 df_penguins = pd.get_dummies(input_penguins, prefix=encode)
-X = df_penguins[:-1]  # All but the last row (the input)
-input_row = df_penguins[-1:]  # The last row (the input)
+X = df_penguins[1:]
+input_row = df_penguins[:1]
 
 # Encode y
 target_mapper = {'Adelie': 0, 'Chinstrap': 1, 'Gentoo': 2}
@@ -107,23 +104,19 @@ clf.fit(X, y)
 # Apply model to make predictions
 prediction_proba = clf.predict_proba(input_row)
 
-# Get the index of the species with the highest probability
+# 獲取概率最高的物種的索引
 predicted_index = np.argmax(prediction_proba)
 
-# Use that index to get the predicted species
+# 使用該索引來獲取預測的物種
 predicted_species = list(target_mapper.keys())[predicted_index]
 
-# Display the predicted species
+# 顯示預測的物種
 st.success(f"Predicted Species: {predicted_species}")
 
 # Display prediction probabilities
 df_prediction_proba = pd.DataFrame(prediction_proba, columns=target_mapper.keys())
 df_prediction_proba_percentage = df_prediction_proba * 100
 df_prediction_proba_percentage = df_prediction_proba_percentage.round(2)
-
-# Display the probabilities in a nice DataFrame format
-st.dataframe(df_prediction_proba_percentage, use_container_width=True)
-
 
 # 使用漂亮的數據框顯示概率
 st.dataframe(df_prediction_proba_percentage, 

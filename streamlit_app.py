@@ -43,62 +43,32 @@ with st.expander('Data visualization'):
         color=alt.Color('color:N', scale=None),
         tooltip=['species']
     ).interactive()
-
-    # Add solid red spot
-    red_spot1 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
-        x='Bill Length (mm)',
-        y='Body Mass (g)'
-    )
-
-    st.altair_chart(scatter1 + red_spot1, use_container_width=True)
+    st.altair_chart(scatter1, use_container_width=True)
 
     # 第二個散點圖
     scatter2 = alt.Chart(df).mark_circle(size=60).encode(
-        x='bill_depth_mm',
-        y='flipper_length_mm',
+        x='bill_depth_mm',        # Bill depth
+        y='flipper_length_mm',    # Flipper length
         color=alt.Color('color:N', scale=None),
         tooltip=['species']
     ).interactive()
+    st.altair_chart(scatter2, use_container_width=True)
 
-    # Add solid red spot
-    red_spot2 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
-        x='Bill Depth (mm)',
-        y='Flipper Length (mm)'
-    )
-
-    st.altair_chart(scatter2 + red_spot2, use_container_width=True)
-
-    # 第三個散點圖
     scatter3 = alt.Chart(df).mark_circle(size=60).encode(
-        x='bill_depth_mm',
-        y='bill_length_mm',
+        x='bill_depth_mm',      
+        y='bill_length_mm',   
         color=alt.Color('color:N', scale=None),
         tooltip=['species']
     ).interactive()
+    st.altair_chart(scatter3, use_container_width=True)
 
-    # Add solid red spot
-    red_spot3 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
-        x='Bill Depth (mm)',
-        y='Bill Length (mm)'
-    )
-
-    st.altair_chart(scatter3 + red_spot3, use_container_width=True)
-
-    # 第四個散點圖
     scatter4 = alt.Chart(df).mark_circle(size=60).encode(
-        x='flipper_length_mm',
-        y='body_mass_g',
+        x='flipper_length_mm',      
+        y='body_mass_g',   
         color=alt.Color('color:N', scale=None),
         tooltip=['species']
     ).interactive()
-
-    # Add solid red spot
-    red_spot4 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
-        x='Flipper Length (mm)',
-        y='Body Mass (g)'
-    )
-
-    st.altair_chart(scatter4 + red_spot4, use_container_width=True)
+    st.altair_chart(scatter4, use_container_width=True)
 
 # Correlation expander
 with st.expander('Correlation'):

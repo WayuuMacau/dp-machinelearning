@@ -28,6 +28,25 @@ with st.expander('Data'):
     # Combine X and y for correlation calculation
     combined_df = pd.concat([X_raw, y_numeric], axis=1)
 
+# Input features
+with st.sidebar:
+    st.header('Input features')
+    bill_length_mm = st.slider('Bill length (mm)', 32.1, 59.6, 43.9)
+    bill_depth_mm = st.slider('Bill depth (mm)', 13.1, 21.5, 17.2)
+    flipper_length_mm = st.slider('Flipper length (mm)', 172.0, 231.0, 201.0)
+    body_mass_g = st.slider('Body mass (g)', 2700.0, 6300.0, 4207.0)
+    gender = st.selectbox('Gender', ('male', 'female'))
+    island = st.selectbox('Island', ('Biscoe', 'Dream', 'Torgersen'))
+
+    # Create a DataFrame for the input features
+    data = {'bill_length_mm': bill_length_mm,
+            'bill_depth_mm': bill_depth_mm,
+            'flipper_length_mm': flipper_length_mm,
+            'body_mass_g': body_mass_g,
+            'sex': gender,
+            'island': island}
+    input_df = pd.DataFrame(data, index=[0])
+
 with st.expander('Data visualization'):
     colors = {
         'Adelie': 'rgb(0, 0, 255)',       # Blue
@@ -36,70 +55,69 @@ with st.expander('Data visualization'):
     }
     df['color'] = df['species'].map(colors)
 
-# 第一個散點圖
-scatter1 = alt.Chart(df).mark_circle(size=60).encode(
-    x='bill_length_mm',
-    y='body_mass_g',
-    color=alt.Color('color:N', scale=None),
-    tooltip=['species']
-).interactive()
+    # 第一個散點圖
+    scatter1 = alt.Chart(df).mark_circle(size=60).encode(
+        x='bill_length_mm',
+        y='body_mass_g',
+        color=alt.Color('color:N', scale=None),
+        tooltip=['species']
+    ).interactive()
 
-# Add red spot
-red_spot1 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
-    x='bill_length_mm',
-    y='body_mass_g'
-)
+    # Add red spot
+    red_spot1 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
+        x='bill_length_mm',
+        y='body_mass_g'
+    )
 
-st.altair_chart(scatter1 + red_spot1, use_container_width=True)
+    st.altair_chart(scatter1 + red_spot1, use_container_width=True)
 
-# 第二個散點圖
-scatter2 = alt.Chart(df).mark_circle(size=60).encode(
-    x='bill_depth_mm',
-    y='flipper_length_mm',
-    color=alt.Color('color:N', scale=None),
-    tooltip=['species']
-).interactive()
+    # 第二個散點圖
+    scatter2 = alt.Chart(df).mark_circle(size=60).encode(
+        x='bill_depth_mm',
+        y='flipper_length_mm',
+        color=alt.Color('color:N', scale=None),
+        tooltip=['species']
+    ).interactive()
 
-# Add red spot
-red_spot2 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
-    x='bill_depth_mm',
-    y='flipper_length_mm'
-)
+    # Add red spot
+    red_spot2 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
+        x='bill_depth_mm',
+        y='flipper_length_mm'
+    )
 
-st.altair_chart(scatter2 + red_spot2, use_container_width=True)
+    st.altair_chart(scatter2 + red_spot2, use_container_width=True)
 
-# 第三個散點圖
-scatter3 = alt.Chart(df).mark_circle(size=60).encode(
-    x='bill_depth_mm',
-    y='bill_length_mm',
-    color=alt.Color('color:N', scale=None),
-    tooltip=['species']
-).interactive()
+    # 第三個散點圖
+    scatter3 = alt.Chart(df).mark_circle(size=60).encode(
+        x='bill_depth_mm',
+        y='bill_length_mm',
+        color=alt.Color('color:N', scale=None),
+        tooltip=['species']
+    ).interactive()
 
-# Add red spot
-red_spot3 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
-    x='bill_depth_mm',
-    y='bill_length_mm'
-)
+    # Add red spot
+    red_spot3 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
+        x='bill_depth_mm',
+        y='bill_length_mm'
+    )
 
-st.altair_chart(scatter3 + red_spot3, use_container_width=True)
+    st.altair_chart(scatter3 + red_spot3, use_container_width=True)
 
-# 第四個散點圖
-scatter4 = alt.Chart(df).mark_circle(size=60).encode(
-    x='flipper_length_mm',
-    y='body_mass_g',
-    color=alt.Color('color:N', scale=None),
-    tooltip=['species']
-).interactive()
+    # 第四個散點圖
+    scatter4 = alt.Chart(df).mark_circle(size=60).encode(
+        x='flipper_length_mm',
+        y='body_mass_g',
+        color=alt.Color('color:N', scale=None),
+        tooltip=['species']
+    ).interactive()
 
-# Add red spot
-red_spot4 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
-    x='flipper_length_mm',
-    y='body_mass_g'
-)
+    # Add red spot
+    red_spot4 = alt.Chart(input_df).mark_point(color='red', size=100).encode(
+        x='flipper_length_mm',
+        y='body_mass_g'
+    )
 
-st.altair_chart(scatter4 + red_spot4, use_container_width=True)
-
+    st.altair_chart(scatter4 + red_spot4, use_container_width=True)
 
 # Correlation expander
 with st.expander('Correlation'):
@@ -141,7 +159,7 @@ with st.expander('Cross Validation'):
     train_r2 = r2_score(y_train, y_train_pred)
     test_r2 = r2_score(y_test, y_test_pred)
     train_mae = mean_absolute_error(y_train, y_train_pred)
-    test_mae = mean_absolute_error(y_test, y_test_pred)
+    test_mae = mean_absolute_error(y_train, y_train_pred)
 
     # Create a DataFrame for the metrics
     metrics_df = pd.DataFrame({
@@ -158,56 +176,15 @@ with st.expander('Cross Validation'):
     st.dataframe(metrics_df, use_container_width=False)
 
 # Add summary text
-    st.markdown("""
-    **Summary:**
-    
-    Test Mean Squared Error (MSE) is slightly lower than the Train MSE, which suggests that the model is generalizing well and not overfitting.
+st.markdown("""
+**Summary:**
 
-    R² scores suggest that about 57.84% of the variance in the training data and about 52.6% in the test data is explained by your model. This is a moderate level of explanatory power, indicating that while the model captures some relationship, there is still room for improvement.
+Test Mean Squared Error (MSE) is slightly lower than the Train MSE, which suggests that the model is generalizing well and not overfitting.
 
-    Mean Absolute Error (MAE) values indicate that, on average, the model's predictions are off by about 0.46 for the training set and 0.45 for the test set. This is fairly close, suggesting consistent performance across both datasets.
-    """)
+R² scores suggest that about 57.84% of the variance in the training data and about 52.6% in the test data is explained by your model. This is a moderate level of explanatory power, indicating that while the model captures some relationship, there is still room for improvement.
 
-
-# Input features
-with st.sidebar:
-    st.header('Input features')
-    bill_length_mm = st.slider('Bill length (mm)', 32.1, 59.6, 43.9)
-    bill_depth_mm = st.slider('Bill depth (mm)', 13.1, 21.5, 17.2)
-    flipper_length_mm = st.slider('Flipper length (mm)', 172.0, 231.0, 201.0)
-    body_mass_g = st.slider('Body mass (g)', 2700.0, 6300.0, 4207.0)
-    gender = st.selectbox('Gender', ('male', 'female'))
-    island = st.selectbox('Island', ('Biscoe', 'Dream', 'Torgersen'))
-    
-    # Create a DataFrame for the input features
-    data = {'bill_length_mm': bill_length_mm,
-            'bill_depth_mm': bill_depth_mm,
-            'flipper_length_mm': flipper_length_mm,
-            'body_mass_g': body_mass_g,
-            'sex': gender,
-            'island': island}
-    input_df = pd.DataFrame(data, index=[0])
-    input_penguins = pd.concat([input_df, X_raw], axis=0)
-
-with st.expander('Input features'):
-    st.write('**What you input will display here in real time**')
-    st.dataframe(input_df, use_container_width=False)  # Set to False for narrow width
-
-st.header("", divider="rainbow")
-
-# Data preparation
-# Encode X
-encode = ['island', 'sex']
-df_penguins = pd.get_dummies(input_penguins, prefix=encode)
-X = df_penguins[1:]
-input_row = df_penguins[:1]
-
-# Encode y
-target_mapper = {'Adelie': 0, 'Chinstrap': 1, 'Gentoo': 2}
-def target_encode(val):
-    return target_mapper[val]
-
-y = y_raw.apply(target_encode)
+Mean Absolute Error (MAE) values indicate that, on average, the model's predictions are off by about 0.46 for the training set and 0.45 for the test set. This is fairly close, suggesting consistent performance across both datasets.
+""")
 
 # Model training and inference
 clf = SVC(kernel='poly', probability=True) 
@@ -254,4 +231,4 @@ st.dataframe(df_prediction_proba_percentage,
                  min_value=0, 
                  max_value=100 
                )
-             })  # Ensure this is properly closed
+             })

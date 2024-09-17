@@ -64,7 +64,7 @@ with st.expander('Data visualization'):
     ).interactive()
 
     # Add solid red spot
-    red_spot1 = alt.Chart(input_df).mark_point(color='red', size=100, opacity=1).encode(
+    red_spot1 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
         x='bill_length_mm',
         y='body_mass_g'
     )
@@ -80,7 +80,7 @@ with st.expander('Data visualization'):
     ).interactive()
 
     # Add solid red spot
-    red_spot2 = alt.Chart(input_df).mark_point(color='red', size=100, opacity=1).encode(
+    red_spot2 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
         x='bill_depth_mm',
         y='flipper_length_mm'
     )
@@ -96,7 +96,7 @@ with st.expander('Data visualization'):
     ).interactive()
 
     # Add solid red spot
-    red_spot3 = alt.Chart(input_df).mark_point(color='red', size=100, opacity=1).encode(
+    red_spot3 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
         x='bill_depth_mm',
         y='bill_length_mm'
     )
@@ -112,7 +112,7 @@ with st.expander('Data visualization'):
     ).interactive()
 
     # Add solid red spot
-    red_spot4 = alt.Chart(input_df).mark_point(color='red', size=100, opacity=1).encode(
+    red_spot4 = alt.Chart(input_df).mark_circle(color='red', size=100).encode(
         x='flipper_length_mm',
         y='body_mass_g'
     )

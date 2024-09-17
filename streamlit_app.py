@@ -60,7 +60,8 @@ with st.expander('Correlation'):
     st.dataframe(correlation_df, use_container_width=False)
 
 # SVM Regression Metrics
-with st.expander('Regression Metrics'):
+with st.expander('Cross Validation'):
+    st.text('Train set 80%, Test set 20%; Sampling without replacement')
     # Prepare data for regression
     X_numeric = combined_df.drop('species', axis=1)
     y_numeric = combined_df['species']

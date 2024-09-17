@@ -70,12 +70,16 @@ with st.expander('Correlation'):
     # Ensure all data is numeric
     combined_df = combined_df.select_dtypes(include=[np.number])
 
-    # Calculate correlation
-    correlation_matrix = combined_df.corr()
-    
-    # Display correlation between features and target variable
-    st.write('**Correlation between features and target variable**')
-    st.dataframe(correlation_matrix[['species']].drop('species', axis=1))  # Show correlations with y
+    # Calculate correlation of each feature with the target variable
+    correlation_with_y = combined_df.corr()['species'].drop('species')
+
+    # Create a DataFrame for better display
+    correlation_df = correlation_with_y.reset_index()
+    correlation_df.columns = ['Feature', 'Correlation with y']
+
+    # Display the correlation table
+    st.write('**Correlation between each feature and the target variable**')
+    st.dataframe(correlation_df)
 
     
 st.header("",divider="rainbow")

@@ -115,10 +115,11 @@ with st.expander('Correlation & Feature Importances'):
     # Create a DataFrame for better display
     correlation_df = correlation_with_y.reset_index()
     correlation_df.columns = ['Feature', 'Correlation with y']
+    correlation_df = correlation_df.sort_values('Correlation with y', ascending=False) 
 
     # Display the correlation table with narrow columns
     st.write('**Correlation between each feature and the target variable**')
-    st.dataframe(correlation_df, use_container_width=False)
+    st.dataframe(correlation_df.set_index('Feature'), use_container_width=False)
 
     # Prepare data for regression
     X = X_raw_encoded
@@ -135,7 +136,7 @@ with st.expander('Correlation & Feature Importances'):
     }).sort_values('importance', ascending=False)
 
     st.write("**Feature Importances**")
-    st.dataframe(feature_importance, use_container_width=False)
+    st.dataframe(feature_importance.set_index('Feature'), use_container_width=False)
     #st.bar_chart(feature_importance.set_index('feature'))
 
 # Random Forest Regressor Metrics

@@ -8,7 +8,7 @@ import altair as alt
 
 st.title('🐧Penguin Classifier App')
 st.subheader('🤖 Machine Learning Model - Support Vector Machine')
-st.info('Designed by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 55767752')
+st.info('Designed by Lawrence Ma 🇭🇰 +852 55767752 or 🇲🇴 +853 62824370')
 st.warning("Try to fine-tune the left-hand side parameters to see the prediction result of penguin species")
 
 # Load and prepare data

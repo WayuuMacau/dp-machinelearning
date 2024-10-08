@@ -119,7 +119,7 @@ with st.expander('Correlation & Feature Importances'):
 
     # 顯示相關性表格，移除左側的索引
     st.write('**Correlation between each feature and the target variable**')
-    st.dataframe(correlation_df.set_index('Feature'), use_container_width=True)
+    st.dataframe(correlation_df.set_index('Feature'), use_container_width=False)
 
     # 準備回歸數據
     X = X_raw_encoded
@@ -140,7 +140,7 @@ with st.expander('Correlation & Feature Importances'):
     feature_importance = feature_importance.sort_values('Correlation', ascending=False)
 
     st.write("**Feature Importances**")
-    st.dataframe(feature_importance.set_index('Feature')[['Importance']], use_container_width=True)
+    st.dataframe(feature_importance.set_index('Feature')[['Importance']], use_container_width=False)
     #st.bar_chart(feature_importance.set_index('feature'))
 
 # Random Forest Regressor Metrics

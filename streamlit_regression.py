@@ -8,7 +8,7 @@ import altair as alt
 from supabase import create_client
 from sklearn.preprocessing import LabelEncoder
 
-st.title('🏠 Property Price Predictor')
+st.title('🏠 Properties Price Predictor')
 st.subheader('🤖 Machine Learning Model - Random Forest Regression')
 st.info('Designed by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 55767752')
 st.warning("Try to fine-tune the left-hand side parameters to see the prediction result of property price")
@@ -54,7 +54,7 @@ with st.expander('Data'):
 
 with st.expander('Data visualization'):
     st.caption('Below coordinates of red circles are the parameters chosen by left sidebar.')
-    
+
     # Bed vs Bath
     scatter1 = alt.Chart(df).mark_circle(size=60).encode(
         x='bed',
@@ -101,7 +101,7 @@ with st.expander('Data visualization'):
     st.altair_chart(scatter3 + red_circle3, use_container_width=True)
 
 # Correlation expander
-with st.expander('Correlation'):
+with st.expander('Correlation & Feature Importances'):
     # Ensure all data is numeric
     le = LabelEncoder()
     X_raw_encoded = X_raw.copy()
@@ -118,6 +118,16 @@ with st.expander('Correlation'):
     # Display the correlation table with narrow columns
     st.write('**Correlation between each feature and the target variable**')
     st.dataframe(correlation_df, use_container_width=False)
+
+
+    # Display feature importances
+    feature_importance = pd.DataFrame({
+        'feature': X.columns,
+        'importance': rf_model.feature_importances_
+    }).sort_values('importance', ascending=False)
+
+    st.write("**Feature Importances**")
+    st.bar_chart(feature_importance.set_index('feature'))
 
 # Random Forest Regressor Metrics
 with st.expander('Random Forest Regressor Metrics'):
@@ -205,11 +215,4 @@ prediction = rf_model.predict(input_df_encoded)
 # Display the predicted price
 st.success(f"Predicted Price: ${prediction[0]:,.2f}")
 
-# Display feature importances
-feature_importance = pd.DataFrame({
-    'feature': X.columns,
-    'importance': rf_model.feature_importances_
-}).sort_values('importance', ascending=False)
 
-st.write("**Feature Importances**")
-st.bar_chart(feature_importance.set_index('feature'))

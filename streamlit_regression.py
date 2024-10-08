@@ -101,6 +101,7 @@ with st.expander('Data visualization'):
     st.altair_chart(scatter3 + red_circle3, use_container_width=True)
 
 # Correlation expander
+# Correlation expander
 with st.expander('Correlation & Feature Importances'):
     # Ensure all data is numeric
     le = LabelEncoder()
@@ -119,6 +120,13 @@ with st.expander('Correlation & Feature Importances'):
     st.write('**Correlation between each feature and the target variable**')
     st.dataframe(correlation_df, use_container_width=False)
 
+    # Prepare data for regression
+    X = X_raw_encoded
+    y = y_raw
+
+    # Create and fit the Random Forest regressor
+    rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+    rf_model.fit(X, y)
 
     # Display feature importances
     feature_importance = pd.DataFrame({

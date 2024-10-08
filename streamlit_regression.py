@@ -8,7 +8,7 @@ import altair as alt
 from supabase import create_client
 from sklearn.preprocessing import LabelEncoder
 
-st.title('🏠 Property Price Predictor')
+st.title('🏠 Properties Price Predictor')
 st.subheader('🤖 Machine Learning Model - Random Forest Regression')
 st.info('Designed by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 55767752')
 st.warning("Try to fine-tune the left-hand side parameters to see the prediction result of property price")
@@ -18,9 +18,24 @@ url = "https://cbtanfncszzrrdebqxwp.supabase.co"
 key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNidGFuZm5jc3p6cnJkZWJxeHdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgzOTMzNjUsImV4cCI6MjA0Mzk2OTM2NX0.oXLdobwdPfYDVImtFBj5Ubef5PMYdGpqSMcsyv0rYus"
 supabase = create_client(url, key)
 
-# Load data from Supabase
-response = supabase.table('properties').select("*").execute()
-df = pd.DataFrame(response.data)
+# Function to fetch all data from Supabase with pagination
+def fetch_all_data(table_name, page_size=1000):
+    all_data = []
+    start = 0
+    while True:
+        response = supabase.table(table_name).select("*").range(start, start + page_size - 1).execute()
+        data = response.data
+        if not data:
+            break
+        all_data.extend(data)
+        start += page_size
+        if len(data) < page_size:
+            break
+    return pd.DataFrame(all_data)
+
+# Load all data from Supabase
+with st.spinner('Loading all data from Supabase... This may take a while for large datasets.'):
+    df = fetch_all_data('properties')
 
 X_raw = df.drop('price', axis=1)
 y_raw = df.price
@@ -46,7 +61,8 @@ input_df = pd.DataFrame(input_data)
 
 with st.expander('Data'):
     st.write('**Raw data**')
-    st.write(df)
+    st.write(f"Total number of records: {len(df)}")
+    st.dataframe(df)
     st.write('**X - Independent variables**')
     st.write(X_raw)
     st.write('**y - Dependent variable**')

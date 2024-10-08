@@ -10,7 +10,7 @@ from sklearn.preprocessing import LabelEncoder
 
 st.title('🏠 Properties Price Predictor')
 st.subheader('🤖 Machine Learning Model - Random Forest Regression')
-st.info('Designed by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 55767752')
+st.info('Designed by Lawrence Ma 🇭🇰 +852 55767752 or 🇲🇴 +853 62824370')
 st.warning("Try to fine-tune the left-hand side parameters to see the prediction result of property price")
 
 # Supabase connection

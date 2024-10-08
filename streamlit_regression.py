@@ -103,40 +103,44 @@ with st.expander('Data visualization'):
 
 # Correlation expander
 with st.expander('Correlation & Feature Importances'):
-    # Ensure all data is numeric
+    # 確保所有數據都是數字類型
     le = LabelEncoder()
     X_raw_encoded = X_raw.copy()
     X_raw_encoded['city'] = le.fit_transform(X_raw_encoded['city'])
     combined_df_numeric = pd.concat([X_raw_encoded, y_raw], axis=1)
 
-    # Calculate correlation of each feature with the target variable
+    # 計算每個特徵與目標變量的相關性
     correlation_with_y = combined_df_numeric.corr()['price'].drop('price')
 
-    # Create a DataFrame for better display
+    # 創建 DataFrame 以便更好地顯示並按降序排序
     correlation_df = correlation_with_y.reset_index()
     correlation_df.columns = ['Feature', 'Correlation with y']
-    correlation_df = correlation_df.sort_values('Correlation with y', ascending=False) 
+    correlation_df = correlation_df.sort_values('Correlation with y', ascending=False)  # 按降序排序
 
-    # Display the correlation table with narrow columns
+    # 顯示相關性表格，移除左側的索引
     st.write('**Correlation between each feature and the target variable**')
     st.dataframe(correlation_df.set_index('Feature'), use_container_width=False)
 
-    # Prepare data for regression
+    # 準備回歸數據
     X = X_raw_encoded
     y = y_raw
 
-    # Create and fit the Random Forest regressor
+    # 創建並擬合隨機森林回歸模型
     rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
     rf_model.fit(X, y)
 
-    # Display feature importances
+    # 顯示特徵重要性
     feature_importance = pd.DataFrame({
-        'feature': X.columns,
-        'importance': rf_model.feature_importances_
-    }).sort_values('importance', ascending=False)
+        'Feature': X.columns,
+        'Importance': rf_model.feature_importances_
+    })
+
+    # 根據相關性表格的順序重新排列特徵重要性
+    feature_importance['Correlation'] = feature_importance['Feature'].map(correlation_with_y)
+    feature_importance = feature_importance.sort_values('Correlation', ascending=False)
 
     st.write("**Feature Importances**")
-    st.dataframe(feature_importance.set_index('Feature'), use_container_width=False)
+    st.dataframe(feature_importance[['Feature', 'Importance']], use_container_width=False)
     #st.bar_chart(feature_importance.set_index('feature'))
 
 # Random Forest Regressor Metrics

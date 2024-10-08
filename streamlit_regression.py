@@ -14,8 +14,8 @@ st.info('Designed by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 5576775
 st.warning("Try to fine-tune the left-hand side parameters to see the prediction result of property price")
 
 # Supabase connection
-url = "YOUR_SUPABASE_URL"
-key = "YOUR_SUPABASE_KEY"
+url = "https://cbtanfncszzrrdebqxwp.supabase.co"
+key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNidGFuZm5jc3p6cnJkZWJxeHdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgzOTMzNjUsImV4cCI6MjA0Mzk2OTM2NX0.oXLdobwdPfYDVImtFBj5Ubef5PMYdGpqSMcsyv0rYus"
 supabase = create_client(url, key)
 
 # Load data from Supabase

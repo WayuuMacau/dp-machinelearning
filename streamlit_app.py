@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 import altair as alt
 
 st.title('🐧Penguin Classifier App')
-st.subheader('🤖 machine learning model - support vector machine')
+st.subheader('🤖 Machine Learning Model - Support Vector Machine')
 st.info('Designed by Lawrence Ma 🇲🇴 +853 62824370 or 🇭🇰 +852 55767752')
 st.warning("Try to fine-tune the left-hand side parameters to see the prediction result of penguin species")
 

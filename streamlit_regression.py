@@ -85,22 +85,22 @@ with st.expander('Data visualization'):
 
     st.altair_chart(scatter2 + red_circle2, use_container_width=True)
 
-    # Acre Lot vs Bed
+    # Acre Lot vs house_size
     scatter3 = alt.Chart(df).mark_circle(size=60).encode(
         x='acre_lot',
-        y='bed',
+        y='house_size',
         color='price:Q',
-        tooltip=['acre_lot', 'bed', 'price']
+        tooltip=['acre_lot', 'house_size', 'price']
     ).interactive()
 
     red_circle3 = alt.Chart(input_df).mark_circle(size=100, color='red').encode(
         x='acre_lot',
-        y='bed'
+        y='house_size'
     )
 
     st.altair_chart(scatter3 + red_circle3, use_container_width=True)
 
-# Correlation expander
+
 # Correlation expander
 with st.expander('Correlation & Feature Importances'):
     # Ensure all data is numeric
@@ -135,7 +135,8 @@ with st.expander('Correlation & Feature Importances'):
     }).sort_values('importance', ascending=False)
 
     st.write("**Feature Importances**")
-    st.bar_chart(feature_importance.set_index('feature'))
+    st.dataframe(feature_importance, use_container_width=False)
+    #st.bar_chart(feature_importance.set_index('feature'))
 
 # Random Forest Regressor Metrics
 with st.expander('Random Forest Regressor Metrics'):

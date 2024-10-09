@@ -204,32 +204,17 @@ with st.expander('Input features'):
 
 st.header("", divider="rainbow")
 
-
 # Data preparation
 # Encode input
 input_df_encoded = input_df.copy()
-
-# 使用 LabelEncoder 對類別特徵進行編碼
+# 使用 LabelEncoder 對所有四個類別變數進行編碼
 for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
-    input_df_encoded[column] = le.fit_transform(input_df_encoded[column])
-
-# 在選擇 X_pred 之前，顯示 input_df_encoded 的列名
-st.write("Input DataFrame Columns:", input_df_encoded.columns)
-
-   # 確保使用 X_raw 中的所有特徵進行預測
-try:
-    X_pred = input_df_encoded[['age', 'gender', 'loyalty_program', 'membership_years', 'marital_status', 'education_level', 'number_of_children']]
-except KeyError as e:
-    st.error(f"KeyError: {e}. Please check the columns in input_df_encoded.")
-    st.write("Available columns:", input_df_encoded.columns)
-    raise  # 重新引發錯誤以便進一步調試
+    input_df_encoded[column] = le.transform(input_df_encoded[column])
 
 # Model training and inference
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)
 rf_model.fit(X, y)
-
 # Apply model to make predictions
-prediction = rf_model.predict(X_pred)
-
-# Display the predicted sales
-st.success(f"Predicted Sales: ${prediction[0]:,.2f}")
+prediction = rf_model.predict(input_df_encoded)
+# Display the predicted price
+st.success(f"Predicted Price: ${prediction[0]:,.2f}")

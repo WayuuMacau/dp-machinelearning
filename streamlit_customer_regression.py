@@ -208,7 +208,13 @@ st.header("", divider="rainbow")
 # Data preparation
 # Encode input
 input_df_encoded = input_df.copy()
-input_df_encoded['gender', 'loyalty_program', 'marital_status', 'education_level'] = le.transform(input_df_encoded['gender', 'loyalty_program', 'marital_status', 'education_level'])
+
+# 使用 LabelEncoder 對類別特徵進行編碼
+for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
+    input_df_encoded[column] = le.fit_transform(input_df_encoded[column])
+
+# 確保使用 X_raw 中的所有特徵進行預測
+X_pred = input_df_encoded[['age', 'gender', 'loyalty_program', 'membership_years', 'marital_status', 'education_level', 'number_of_children']]
 
 # Model training and inference
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)

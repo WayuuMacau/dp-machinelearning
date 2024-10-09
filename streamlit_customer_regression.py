@@ -34,7 +34,6 @@ with st.sidebar:
     membership_years = st.slider('Membership Years', int(X_raw['membership_years'].min()), int(X_raw['membership_years'].max()), 3)
     marital_status = st.selectbox('Marital Status', X_raw['marital_status'].unique())
     education_level = st.selectbox('Education Level', X_raw['education_level'].unique())
-    total_sales = st.slider('Sales', float(X_raw['total_sales'].min()), float(X_raw['total_sales'].max()), 6000)
 
 # Create a DataFrame for the input features
 input_data = {
@@ -43,8 +42,7 @@ input_data = {
     'loyalty_program': [loyalty_program],
     'membership_years': [membership_years],
     'marital_status': [marital_status],
-    'education_level': [education_level],
-    'total_sales': [total_sales]
+    'education_level': [education_level]
 }
 input_df = pd.DataFrame(input_data)
 

@@ -11,7 +11,7 @@ from sklearn.preprocessing import LabelEncoder
 st.title('🛒 Customer Consumption Predictor')
 st.subheader('🤖 Machine Learning Model - Random Forest Regression')
 st.info('Designed by Lawrence Ma 🇭🇰 +852 55767752 or 🇲🇴 +853 62824370')
-st.warning("Try to fine-tune the left-hand side parameters to see the prediction result of property price")
+st.warning("Try to fine-tune the left-hand side parameters to see the prediction result of customer's consumption")
 
 # Supabase connection
 url = "https://cbtanfncszzrrdebqxwp.supabase.co"
@@ -22,8 +22,8 @@ supabase = create_client(url, key)
 response = supabase.table('sales').select("*").execute()
 df = pd.DataFrame(response.data)
 
-X_raw = df.drop('price', axis=1)
-y_raw = df.price
+X_raw = df.drop('total_sales', axis=1)
+y_raw = df.total_sales
 
 # Input features
 with st.sidebar:
@@ -218,5 +218,5 @@ rf_model.fit(X, y)
 # Apply model to make predictions
 prediction = rf_model.predict(input_df_encoded)
 
-# Display the predicted price
-st.success(f"Predicted Price: ${prediction[0]:,.2f}")
+# Display the predicted sales
+st.success(f"Predicted Sales: ${prediction[0]:,.2f}")

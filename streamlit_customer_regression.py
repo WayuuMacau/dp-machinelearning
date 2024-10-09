@@ -74,14 +74,14 @@ with st.expander('Data visualization'):
 
     # gender vs membership_years
     scatter2 = alt.Chart(df).mark_circle(size=60).encode(
-        x='gender',
+        x='age',
         y='membership_years',
         color='price:Q',
-        tooltip=['gender', 'membership_years', 'total_sales']
+        tooltip=['age', 'membership_years', 'total_sales']
     ).interactive()
 
     red_circle2 = alt.Chart(input_df).mark_circle(size=100, color='red').encode(
-        x='gender',
+        x='age',
         y='membership_years'
     )
 

@@ -19,7 +19,7 @@ key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNi
 supabase = create_client(url, key)
 
 # Load data from Supabase
-response = supabase.table('properties').select("*").execute()
+response = supabase.table('properties').select("DISTINCT *").execute()
 df = pd.DataFrame(response.data)
 
 X_raw = df.drop('price', axis=1)

@@ -14,14 +14,15 @@ st.info('Designed by Lawrence Ma 🇭🇰 +852 55767752 or 🇲🇴 +853 6282437
 st.warning("Try to fine-tune the left-hand side parameters to see the prediction result of customer's consumption")
 
 # Supabase connection
-url = "https://cbtanfncszzrrdebqxwp.supabase.co"
-key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNidGFuZm5jc3p6cnJkZWJxeHdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgzOTMzNjUsImV4cCI6MjA0Mzk2OTM2NX0.oXLdobwdPfYDVImtFBj5Ubef5PMYdGpqSMcsyv0rYus"
-supabase = create_client(url, key)
+#url = "https://cbtanfncszzrrdebqxwp.supabase.co"
+#key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNidGFuZm5jc3p6cnJkZWJxeHdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgzOTMzNjUsImV4cCI6MjA0Mzk2OTM2NX0.oXLdobwdPfYDVImtFBj5Ubef5PMYdGpqSMcsyv0rYus"
+#supabase = create_client(url, key)
 
 # Load data from Supabase
-response = supabase.table('sales').select("*").execute()
-df = pd.DataFrame(response.data)
+#response = supabase.table('sales').select("*").execute()
+#df = pd.DataFrame(response.data)
 
+df = pd.read_csv('https://raw.githubusercontent.com/WayuuMacau/Public/refs/heads/main/retail_data-cleaned.csv')
 X_raw = df.drop('total_sales', axis=1)
 y_raw = df.total_sales
 

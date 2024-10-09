@@ -28,7 +28,7 @@ y_raw = df.total_sales
 # Input features
 with st.sidebar:
     st.header('Input features')
-    age = st.slider('Age', int(X_raw['bed'].min()), int(X_raw['age'].max()), 28)
+    age = st.slider('Age', int(X_raw['age'].min()), int(X_raw['age'].max()), 28)
     gender = st.selectbox('Gender', X_raw['gender'].unique())
     loyalty_program = st.selectbox('Loyalty Program', X_raw['loylty_program'].unique())
     membership_years = st.slider('Membership Years', int(X_raw['membership_years'].min()), int(X_raw['membership_years'].max()), 3)
@@ -59,7 +59,7 @@ with st.expander('Data'):
 with st.expander('Data visualization'):
     st.caption('Below coordinates of red circles are the parameters chosen by left sidebar.')
 
-    # Bed vs Bath
+    # age vs gender
     scatter1 = alt.Chart(df).mark_circle(size=60).encode(
         x='age',
         y='gender',
@@ -74,7 +74,7 @@ with st.expander('Data visualization'):
 
     st.altair_chart(scatter1 + red_circle1, use_container_width=True)
 
-    # Bath vs Acre Lot
+    # gender vs membership_years
     scatter2 = alt.Chart(df).mark_circle(size=60).encode(
         x='gender',
         y='membership_years',

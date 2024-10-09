@@ -216,7 +216,7 @@ for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']
 # 在選擇 X_pred 之前，顯示 input_df_encoded 的列名
 st.write("Input DataFrame Columns:", input_df_encoded.columns)
 
-# 確保使用 X_raw 中的所有特徵進行預測
+   # 確保使用 X_raw 中的所有特徵進行預測
 try:
     X_pred = input_df_encoded[['age', 'gender', 'loyalty_program', 'membership_years', 'marital_status', 'education_level', 'number_of_children']]
 except KeyError as e:

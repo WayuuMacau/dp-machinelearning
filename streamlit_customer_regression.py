@@ -224,7 +224,12 @@ for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']
         st.warning(f"Warning: No encoder found for '{column}'.")
 
 # 確保 input_df_encoded 的列名與 X_raw_encoded 一致
-input_df_encoded = input_df_encoded[X_raw_encoded.columns]
+# 注意：這裡的 columns 需要確保是存在的
+missing_cols = set(X_raw_encoded.columns) - set(input_df_encoded.columns)
+if missing_cols:
+    st.warning(f"Warning: Missing columns in input data: {missing_cols}")
+else:
+    input_df_encoded = input_df_encoded[X_raw_encoded.columns]
 
 # Model training and inference
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)

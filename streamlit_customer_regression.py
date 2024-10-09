@@ -220,7 +220,7 @@ st.header("", divider="rainbow")
 
 # Data preparation
 # Encode input
-# Apply OneHotEncoder to the input DataFrame
+# Encode input features
 input_encoded_cols = encoder.transform(input_df[categorical_cols])
 input_encoded_df = pd.DataFrame(input_encoded_cols, columns=encoder.get_feature_names_out(categorical_cols))
 

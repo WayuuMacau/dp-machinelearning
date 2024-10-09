@@ -206,34 +206,31 @@ st.header("", divider="rainbow")
 
 # Data preparation
 # Check if input_df contains the required columns
-required_columns = ['gender', 'loyalty_program', 'marital_status', 'education_level']
+le_dict = {}
+for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
+    le = LabelEncoder()
+    le.fit(X_raw[column])
+    le_dict[column] = le  # Store the fitted encoder
 
-# Print the available columns for debugging
-st.write("Columns in input_df:", input_df.columns.tolist())
-
-# Fit the LabelEncoder on the training data
-for column in required_columns:
-    if column in X_raw.columns:
-        le.fit(X_raw[column])
-    else:
-        st.error(f"Column '{column}' is not found in the training data.")
-
-# Encode input
+# Encode input DataFrame
 input_df_encoded = input_df.copy()
-
-# Encode categorical features
-for column in required_columns:
+for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
     if column in input_df_encoded.columns:
-        input_df_encoded[column] = le.transform(input_df_encoded[column])
+        try:
+            input_df_encoded[column] = le_dict[column].transform(input_df_encoded[column])
+        except ValueError as e:
+            st.error(f"Error encoding {column}: {e}")
+            # Assign a default value or handle unseen labels
+            input_df_encoded[column] = np.nan  # or some default value
     else:
         st.error(f"Column '{column}' is not found in the input data.")
 
-# Print the encoded DataFrame for debugging
-st.write("Encoded input_df:", input_df_encoded)
-
 # Model training and inference
+X_encoded = pd.concat([X_raw.drop(columns=['gender', 'loyalty_program', 'marital_status', 'education_level']), 
+                        pd.DataFrame({col: le_dict[col].transform(X_raw[col]) for col in le_dict})], axis=1)
+
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)
-rf_model.fit(X, y)
+rf_model.fit(X_encoded, y_raw)
 
 # Apply model to make predictions
 prediction = rf_model.predict(input_df_encoded)

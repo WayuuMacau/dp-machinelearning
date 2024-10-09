@@ -204,17 +204,4 @@ with st.expander('Input features'):
 
 st.header("", divider="rainbow")
 
-# Data preparation
-# Encode input
-input_df_encoded = input_df.copy()
-input_df_encoded['gender', 'loyalty_program','marital_status', 'education_level'] = le.transform(input_df_encoded['gender', 'loyalty_program','marital_status', 'education_level'])
 
-# Model training and inference
-rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)
-rf_model.fit(X, y)
-
-# Apply model to make predictions
-prediction = rf_model.predict(input_df_encoded)
-
-# Display the predicted price
-st.success(f"Predicted Price: ${prediction[0]:,.2f}")

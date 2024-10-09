@@ -23,20 +23,6 @@ st.warning("Try to fine-tune the left-hand side parameters to see the prediction
 #df = pd.DataFrame(response.data)
 
 df = pd.read_csv('https://raw.githubusercontent.com/WayuuMacau/Public/refs/heads/main/retail_data-cleaned.csv')
-
-# Create a OneHotEncoder object
-encoder = OneHotEncoder(sparse=False)
-
-# Apply OneHotEncoder to the categorical columns
-categorical_cols = ['gender', 'loyalty_program', 'marital_status', 'education_level']
-encoded_cols = encoder.fit_transform(df[categorical_cols])
-
-# Create new DataFrame with encoded categorical columns
-encoded_df = pd.DataFrame(encoded_cols, columns=encoder.get_feature_names_out(categorical_cols))
-
-# Replace the original categorical columns with the encoded columns in the DataFrame
-df = pd.concat([df.drop(categorical_cols, axis=1), encoded_df], axis=1)
-
 X_raw = df.drop('total_sales', axis=1)
 y_raw = df.total_sales
 

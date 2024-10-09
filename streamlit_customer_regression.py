@@ -89,14 +89,13 @@ with st.expander('Data visualization'):
 
 # Correlation expander
 with st.expander('Correlation & Feature Importances'):
-    # 確保所有數據都是數字類型
+    # Ensure all data is numeric
     le = LabelEncoder()
     X_raw_encoded = X_raw.copy()
-
-    # 對指定的四個列進行編碼
-    for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
+    # Encode the specified columns
+    categorical_cols = ['gender', 'loyalty_program','marital_status', 'education_level']
+    for column in categorical_cols:
         X_raw_encoded[column] = le.fit_transform(X_raw_encoded[column])
-
     combined_df_numeric = pd.concat([X_raw_encoded, y_raw], axis=1)
 
     # 計算每個特徵與目標變量的相關性
@@ -205,37 +204,16 @@ with st.expander('Input features'):
 st.header("", divider="rainbow")
 
 # Data preparation
-# Encode training data
-X_raw_encoded = X_raw.copy()
-le_dict = {}
-
-# 使用 LabelEncoder 對所有四個類別變數進行編碼
-for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
-    le = LabelEncoder()
-    X_raw_encoded[column] = le.fit_transform(X_raw_encoded[column])
-    le_dict[column] = le  # 保存每個編碼器以便後續使用
-
-# 確保輸入數據也進行相同的編碼
+# Encode input
 input_df_encoded = input_df.copy()
-for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
-    if column in le_dict:
-        input_df_encoded[column] = le_dict[column].transform(input_df_encoded[column])
-    else:
-        st.warning(f"Warning: No encoder found for '{column}'.")
-
-# 確保 input_df_encoded 的列名與 X_raw_encoded 一致
-# 注意：這裡的 columns 需要確保是存在的
-missing_cols = set(X_raw_encoded.columns) - set(input_df_encoded.columns)
-if missing_cols:
-    st.warning(f"Warning: Missing columns in input data: {missing_cols}")
-else:
-    input_df_encoded = input_df_encoded[X_raw_encoded.columns]
+input_df_encoded[categorical_cols] = le.transform(input_df_encoded[categorical_cols])
 
 # Model training and inference
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)
-rf_model.fit(X_raw_encoded, y_raw)
+rf_model.fit(X, y)
 
 # Apply model to make predictions
 prediction = rf_model.predict(input_df_encoded)
+
 # Display the predicted price
 st.success(f"Predicted Price: ${prediction[0]:,.2f}")

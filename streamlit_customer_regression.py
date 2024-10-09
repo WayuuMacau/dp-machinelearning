@@ -6,7 +6,7 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.model_selection import train_test_split
 import altair as alt
 from supabase import create_client
-from sklearn.preprocessing import labelEncoder
+from sklearn.preprocessing import LabelEncoder
 
 st.title('🛒 Customer Consumption Predictor')
 st.subheader('🤖 Machine Learning Model - Random Forest Regression')

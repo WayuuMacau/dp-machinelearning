@@ -30,7 +30,7 @@ with st.sidebar:
     st.header('Input features')
     age = st.slider('Age', int(X_raw['age'].min()), int(X_raw['age'].max()), 28)
     gender = st.selectbox('Gender', X_raw['gender'].unique())
-    loyalty_program = st.selectbox('Loyalty Program', X_raw['loylty_program'].unique())
+    loyalty_program = st.selectbox('Loyalty Program', X_raw['loyalty_program'].unique())
     membership_years = st.slider('Membership Years', int(X_raw['membership_years'].min()), int(X_raw['membership_years'].max()), 3)
     marital_status = st.selectbox('Marital Status', X_raw['marital_status'].unique())
     education_level = st.selectbox('Education Level', X_raw['education_level'].unique())

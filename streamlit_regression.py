@@ -220,7 +220,7 @@ input_df_encoded = input_df.copy()
 input_df_encoded['city'] = le.transform(input_df_encoded['city'])
 
 # Model training and inference
-rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=4)
+rf_model = RandomForestRegressor(random_state=0, n_estimators=3000, max_depth=300, min_samples_split=4)
 rf_model.fit(X, y)
 
 # Apply model to make predictions

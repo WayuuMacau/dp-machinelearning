@@ -213,8 +213,16 @@ input_df_encoded = input_df.copy()
 for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
     input_df_encoded[column] = le.fit_transform(input_df_encoded[column])
 
+# 在選擇 X_pred 之前，顯示 input_df_encoded 的列名
+st.write("Input DataFrame Columns:", input_df_encoded.columns)
+
 # 確保使用 X_raw 中的所有特徵進行預測
-X_pred = input_df_encoded[['age', 'gender', 'loyalty_program', 'membership_years', 'marital_status', 'education_level', 'number_of_children']]
+try:
+    X_pred = input_df_encoded[['age', 'gender', 'loyalty_program', 'membership_years', 'marital_status', 'education_level', 'number_of_children']]
+except KeyError as e:
+    st.error(f"KeyError: {e}. Please check the columns in input_df_encoded.")
+    st.write("Available columns:", input_df_encoded.columns)
+    raise  # 重新引發錯誤以便進一步調試
 
 # Model training and inference
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)

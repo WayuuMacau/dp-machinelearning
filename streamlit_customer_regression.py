@@ -205,27 +205,25 @@ with st.expander('Input features'):
 st.header("", divider="rainbow")
 
 
-# Data preparation
+# Data preparation for prediction
 # Initialize LabelEncoder
 le = LabelEncoder()
 
-# Encode specified columns
-encoded_columns = ['gender', 'loyalty_program', 'marital_status', 'education_level']
+# Encode specified columns for the input DataFrame
 input_df_encoded = input_df.copy()
 
-for column in encoded_columns:
+for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
     input_df_encoded[column] = le.fit_transform(input_df_encoded[column])
 
-# Define X and y
-X = input_df_encoded.drop(columns=['total_sales'])  # Exclude 'total_sales' from features
-y = input_df_encoded['total_sales']                   # Include 'price' as target variable
+# Define X for prediction
+X_pred = input_df_encoded.copy()  # Use the encoded input DataFrame directly
 
-# Model training and inference
+# Ensure that the model is trained on the same features
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)
-rf_model.fit(X, y)
+rf_model.fit(X_raw_encoded, y_raw)  # Fit the model on the original encoded data
 
 # Apply model to make predictions
-prediction = rf_model.predict(input_df_encoded)
+prediction = rf_model.predict(X_pred)
 
 # Display the predicted sales
 st.success(f"Predicted Sales: ${prediction[0]:,.2f}")

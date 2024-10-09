@@ -204,33 +204,25 @@ with st.expander('Input features'):
 
 st.header("", divider="rainbow")
 
-# Data preparation
-# Check if input_df contains the required columns
-le_dict = {}
-for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
-    le = LabelEncoder()
-    le.fit(X_raw[column])
-    le_dict[column] = le  # Store the fitted encoder
 
-# Encode input DataFrame
+# Data preparation
+# Initialize LabelEncoder
+le = LabelEncoder()
+
+# Encode specified columns
+encoded_columns = ['gender', 'loyalty_program', 'marital_status', 'education_level']
 input_df_encoded = input_df.copy()
-for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
-    if column in input_df_encoded.columns:
-        try:
-            input_df_encoded[column] = le_dict[column].transform(input_df_encoded[column])
-        except ValueError as e:
-            st.error(f"Error encoding {column}: {e}")
-            # Assign a default value or handle unseen labels
-            input_df_encoded[column] = np.nan  # or some default value
-    else:
-        st.error(f"Column '{column}' is not found in the input data.")
+
+for column in encoded_columns:
+    input_df_encoded[column] = le.fit_transform(input_df_encoded[column])
+
+# Define X and y
+X = input_df_encoded.drop(columns=['total_sales'])  # Exclude 'price' from features
+y = input_df_encoded['price']                   # Include 'price' as target variable
 
 # Model training and inference
-X_encoded = pd.concat([X_raw.drop(columns=['gender', 'loyalty_program', 'marital_status', 'education_level']), 
-                        pd.DataFrame({col: le_dict[col].transform(X_raw[col]) for col in le_dict})], axis=1)
-
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)
-rf_model.fit(X_encoded, y_raw)
+rf_model.fit(X, y)
 
 # Apply model to make predictions
 prediction = rf_model.predict(input_df_encoded)

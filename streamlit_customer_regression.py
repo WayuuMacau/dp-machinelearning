@@ -206,22 +206,22 @@ st.header("", divider="rainbow")
 
 
 # Data preparation
-# Encode input
-input_df_encoded = input_df.copy()
+    # Encode input
+    input_df_encoded = input_df.copy()
 
-# 使用 LabelEncoder 對類別特徵進行編碼
-for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
-    input_df_encoded[column] = le.fit_transform(input_df_encoded[column])
+    # 使用 LabelEncoder 對類別特徵進行編碼
+    for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
+        input_df_encoded[column] = le.fit_transform(input_df_encoded[column])
 
-# 確保使用 X_raw 中的所有特徵進行預測
-X_pred = input_df_encoded[['age', 'gender', 'loyalty_program', 'membership_years', 'marital_status', 'education_level', 'number_of_children']]
+    # 確保使用 X_raw 中的所有特徵進行預測
+    X_pred = input_df_encoded[['age', 'gender', 'loyalty_program', 'membership_years', 'marital_status', 'education_level', 'number_of_children']]
 
-# Model training and inference
-rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)
-rf_model.fit(X, y)
+    # Model training and inference
+    rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)
+    rf_model.fit(X, y)
 
-# Apply model to make predictions
-prediction = rf_model.predict(X_pred)
+    # Apply model to make predictions
+    prediction = rf_model.predict(X_pred)
 
-# Display the predicted sales
-st.success(f"Predicted Sales: ${prediction[0]:,.2f}")
+    # Display the predicted sales
+    st.success(f"Predicted Sales: ${prediction[0]:,.2f}")

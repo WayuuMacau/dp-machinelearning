@@ -205,20 +205,28 @@ with st.expander('Input features'):
 st.header("", divider="rainbow")
 
 # Data preparation
-# Encode input
-input_df_encoded = input_df.copy()
+# Encode training data
+X_raw_encoded = X_raw.copy()
+le_dict = {}
 
 # 使用 LabelEncoder 對所有四個類別變數進行編碼
 for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
-    # 確保在編碼之前，類別值是在訓練時見過的
-    if set(input_df_encoded[column]).issubset(set(le.classes_)):
-        input_df_encoded[column] = le.transform(input_df_encoded[column])
+    le = LabelEncoder()
+    X_raw_encoded[column] = le.fit_transform(X_raw_encoded[column])
+    le_dict[column] = le  # 保存每個編碼器以便後續使用
+
+# 確保輸入數據也進行相同的編碼
+input_df_encoded = input_df.copy()
+for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
+    if column in le_dict:
+        input_df_encoded[column] = le_dict[column].transform(input_df_encoded[column])
     else:
-        st.warning(f"Warning: Some labels in '{column}' are unseen during training.")
+        st.warning(f"Warning: No encoder found for '{column}'.")
 
 # Model training and inference
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)
-rf_model.fit(X, y)
+rf_model.fit(X_raw_encoded, y_raw)
+
 # Apply model to make predictions
 prediction = rf_model.predict(input_df_encoded)
 # Display the predicted price

@@ -207,7 +207,13 @@ st.header("", divider="rainbow")
 # Data preparation
 # Encode input
 input_df_encoded = input_df.copy()
-input_df_encoded['city'] = le.transform(input_df_encoded['city'])
+
+# Encode categorical features
+for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
+    if column in input_df_encoded.columns:
+        input_df_encoded[column] = le.transform(input_df_encoded[column])
+    else:
+        st.error(f"Column '{column}' is not found in the input data.")
 
 # Model training and inference
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)

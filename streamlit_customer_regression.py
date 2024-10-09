@@ -217,8 +217,8 @@ for column in encoded_columns:
     input_df_encoded[column] = le.fit_transform(input_df_encoded[column])
 
 # Define X and y
-X = input_df_encoded.drop(columns=['total_sales'])  # Exclude 'price' from features
-y = input_df_encoded['price']                   # Include 'price' as target variable
+X = input_df_encoded.drop(columns=['total_sales'])  # Exclude 'total_sales' from features
+y = input_df_encoded['total_sales']                   # Include 'price' as target variable
 
 # Model training and inference
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)

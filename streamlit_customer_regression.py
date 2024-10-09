@@ -223,6 +223,9 @@ for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']
     else:
         st.warning(f"Warning: No encoder found for '{column}'.")
 
+# 確保 input_df_encoded 的列名與 X_raw_encoded 一致
+input_df_encoded = input_df_encoded[X_raw_encoded.columns]
+
 # Model training and inference
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)
 rf_model.fit(X_raw_encoded, y_raw)

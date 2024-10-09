@@ -23,6 +23,20 @@ st.warning("Try to fine-tune the left-hand side parameters to see the prediction
 #df = pd.DataFrame(response.data)
 
 df = pd.read_csv('https://raw.githubusercontent.com/WayuuMacau/Public/refs/heads/main/retail_data-cleaned.csv')
+
+# Create a OneHotEncoder object
+encoder = OneHotEncoder(sparse=False)
+
+# Apply OneHotEncoder to the categorical columns
+categorical_cols = ['gender', 'loyalty_program', 'marital_status', 'education_level']
+encoded_cols = encoder.fit_transform(df[categorical_cols])
+
+# Create new DataFrame with encoded categorical columns
+encoded_df = pd.DataFrame(encoded_cols, columns=encoder.get_feature_names_out(categorical_cols))
+
+# Replace the original categorical columns with the encoded columns in the DataFrame
+df = pd.concat([df.drop(categorical_cols, axis=1), encoded_df], axis=1)
+
 X_raw = df.drop('total_sales', axis=1)
 y_raw = df.total_sales
 
@@ -206,15 +220,15 @@ st.header("", divider="rainbow")
 
 # Data preparation
 # Encode input
-input_df_encoded = input_df.copy()
-input_df_encoded[categorical_cols] = le.transform(input_df_encoded[categorical_cols])
+# Apply OneHotEncoder to the input DataFrame
+input_encoded_cols = encoder.transform(input_df[categorical_cols])
+input_encoded_df = pd.DataFrame(input_encoded_cols, columns=encoder.get_feature_names_out(categorical_cols))
 
-# Model training and inference
-rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)
-rf_model.fit(X, y)
+# Replace the original categorical columns with the encoded columns in the input DataFrame
+input_df = pd.concat([input_df.drop(categorical_cols, axis=1), input_encoded_df], axis=1)
 
-# Apply model to make predictions
-prediction = rf_model.predict(input_df_encoded)
+# Make predictions using the trained model
+prediction = rf_model.predict(input_df)
 
-# Display the predicted price
-st.success(f"Predicted Price: ${prediction[0]:,.2f}")
+# Display the prediction
+st.write(f"Predicted consumption: {prediction[0]}")

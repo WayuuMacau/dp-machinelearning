@@ -205,22 +205,14 @@ with st.expander('Input features'):
 st.header("", divider="rainbow")
 
 
-# Data preparation for prediction
-# Initialize LabelEncoder
-le = LabelEncoder()
-
-# Encode specified columns for the input DataFrame
+# Data preparation
+# Encode input
 input_df_encoded = input_df.copy()
+input_df_encoded['gender', 'loyalty_program', 'marital_status', 'education_level'] = le.transform(input_df_encoded['gender', 'loyalty_program', 'marital_status', 'education_level'])
 
-for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
-    input_df_encoded[column] = le.fit_transform(input_df_encoded[column])
-
-# Define X for prediction
-X_pred = input_df_encoded.copy()  # Use the encoded input DataFrame directly
-
-# Ensure that the model is trained on the same features
+# Model training and inference
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)
-rf_model.fit(X_raw_encoded, y_raw)  # Fit the model on the original encoded data
+rf_model.fit(X, y)
 
 # Apply model to make predictions
 prediction = rf_model.predict(X_pred)

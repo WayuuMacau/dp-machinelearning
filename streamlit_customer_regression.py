@@ -205,15 +205,31 @@ with st.expander('Input features'):
 st.header("", divider="rainbow")
 
 # Data preparation
+# Check if input_df contains the required columns
+required_columns = ['gender', 'loyalty_program', 'marital_status', 'education_level']
+
+# Print the available columns for debugging
+st.write("Columns in input_df:", input_df.columns.tolist())
+
+# Fit the LabelEncoder on the training data
+for column in required_columns:
+    if column in X_raw.columns:
+        le.fit(X_raw[column])
+    else:
+        st.error(f"Column '{column}' is not found in the training data.")
+
 # Encode input
 input_df_encoded = input_df.copy()
 
 # Encode categorical features
-for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
+for column in required_columns:
     if column in input_df_encoded.columns:
         input_df_encoded[column] = le.transform(input_df_encoded[column])
     else:
         st.error(f"Column '{column}' is not found in the input data.")
+
+# Print the encoded DataFrame for debugging
+st.write("Encoded input_df:", input_df_encoded)
 
 # Model training and inference
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)

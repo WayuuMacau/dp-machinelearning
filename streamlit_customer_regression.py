@@ -220,15 +220,15 @@ st.header("", divider="rainbow")
 
 # Data preparation
 # Encode input
-# Encode input features
-input_encoded_cols = encoder.transform(input_df[categorical_cols])
-input_encoded_df = pd.DataFrame(input_encoded_cols, columns=encoder.get_feature_names_out(categorical_cols))
+input_df_encoded = input_df.copy()
+input_df_encoded['gender', 'loyalty_program','marital_status', 'education_level'] = le.transform(input_df_encoded['gender', 'loyalty_program','marital_status', 'education_level'])
 
-# Replace the original categorical columns with the encoded columns in the input DataFrame
-input_df = pd.concat([input_df.drop(categorical_cols, axis=1), input_encoded_df], axis=1)
+# Model training and inference
+rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)
+rf_model.fit(X, y)
 
-# Make predictions using the trained model
-prediction = rf_model.predict(input_df)
+# Apply model to make predictions
+prediction = rf_model.predict(input_df_encoded)
 
-# Display the prediction
-st.write(f"Predicted consumption: {prediction[0]}")
+# Display the predicted price
+st.success(f"Predicted Price: ${prediction[0]:,.2f}")

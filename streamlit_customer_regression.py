@@ -207,9 +207,14 @@ st.header("", divider="rainbow")
 # Data preparation
 # Encode input
 input_df_encoded = input_df.copy()
+
 # 使用 LabelEncoder 對所有四個類別變數進行編碼
 for column in ['gender', 'loyalty_program', 'marital_status', 'education_level']:
-    input_df_encoded[column] = le.transform(input_df_encoded[column])
+    # 確保在編碼之前，類別值是在訓練時見過的
+    if set(input_df_encoded[column]).issubset(set(le.classes_)):
+        input_df_encoded[column] = le.transform(input_df_encoded[column])
+    else:
+        st.warning(f"Warning: Some labels in '{column}' are unseen during training.")
 
 # Model training and inference
 rf_model = RandomForestRegressor(random_state=0, n_estimators=300, max_depth=30, min_samples_split=20)

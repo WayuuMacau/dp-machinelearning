@@ -43,6 +43,9 @@ input_data = {
 }
 input_df = pd.DataFrame(input_data)
 
+# Set the Metric column as the index
+input_df.set_index('bill_depth_mm', inplace=True)
+
 with st.expander('Data'):
     st.write('**Raw data**')
     st.write(df)

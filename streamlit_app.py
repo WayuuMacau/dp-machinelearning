@@ -133,6 +133,9 @@ with st.expander('Correlation'):
     correlation_df = correlation_with_y.reset_index()
     correlation_df.columns = ['Feature', 'Correlation with y']
 
+    # Set the Feature column as the index
+    correlation_df.set_index('Feature', inplace=True)
+
     # Display the correlation table with narrow columns
     st.write('**Correlation between each feature and the target variable**')
     st.dataframe(correlation_df, use_container_width=False)

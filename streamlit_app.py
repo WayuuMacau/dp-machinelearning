@@ -205,6 +205,8 @@ with st.expander('SVC Classifier Metrics'):
     
 with st.expander('Input features'):
     st.caption('Below values are the parameters chosen by left sidebar.')
+    # Set the Metric column as the index
+    input_df.set_index('bill_length_mm', inplace=True)
     st.dataframe(input_df, use_container_width=False)  # Set to False for narrow width
 
 st.header("", divider="rainbow")

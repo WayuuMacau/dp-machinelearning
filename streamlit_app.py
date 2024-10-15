@@ -43,9 +43,6 @@ input_data = {
 }
 input_df = pd.DataFrame(input_data)
 
-# Set the bill_length_mm column as the index
-input_df.set_index('bill_length_mm', inplace=True)
-
 with st.expander('Data'):
     st.write('**Raw data**')
     st.write(df)
@@ -209,6 +206,8 @@ with st.expander('SVC Classifier Metrics'):
 with st.expander('Input features'):
     st.caption('Below values are the parameters chosen by left sidebar.')
     st.dataframe(input_df, use_container_width=False)  # Set to False for narrow width
+    # Set the bill_length_mm column as the index
+    input_df.set_index('bill_length_mm', inplace=True)
 
 st.header("", divider="rainbow")
 
